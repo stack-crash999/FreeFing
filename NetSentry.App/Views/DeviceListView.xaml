@@ -1,0 +1,397 @@
+<UserControl x:Class="NetSentry.App.Views.DeviceListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:models="clr-namespace:NetSentry.App.Models"
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="950"
+             Background="{StaticResource BgWindowBrush}">
+
+    <Grid Margin="28,22,28,22">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- ── Row 0: Title & Subnet Badges ── -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,16">
+            <TextBlock x:Name="TitleBlock" Text="Devices on Active Network"
+                       FontSize="20" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"
+                       Margin="0,0,0,10" />
+
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <!-- Protection Active Badge -->
+                <Border Style="{StaticResource PillGreenStyle}" Margin="0,0,8,0">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Border Width="6" Height="6" CornerRadius="3" Background="#10B981" Margin="0,0,6,0" VerticalAlignment="Center" />
+                        <TextBlock Text="ARP Guard Active" FontSize="11" FontWeight="SemiBold"
+                                   Foreground="#34D399" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Subnet Enforced Badge -->
+                <Border Style="{StaticResource PillNeutralStyle}" Margin="0,0,8,0">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Border Width="6" Height="6" CornerRadius="3" Background="#38BDF8" Margin="0,0,6,0" VerticalAlignment="Center" />
+                        <TextBlock Text="Subnet Isolation Enforced" FontSize="11" FontWeight="SemiBold"
+                                   Foreground="#38BDF8" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Last Updated Badge -->
+                <Border Style="{StaticResource PillNeutralStyle}">
+                    <TextBlock x:Name="UpdatedBlock" Text="Updated Just now" FontSize="11" FontWeight="SemiBold"
+                               Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center" />
+                </Border>
+            </StackPanel>
+        </StackPanel>
+
+        <!-- ── Row 1: Search & Filter Controls ── -->
+        <Grid Grid.Row="1" Margin="0,0,0,14">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Search input with vector icon -->
+            <Border Grid.Column="0" Background="{StaticResource BgInputBrush}"
+                    BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="1"
+                    CornerRadius="8" Width="280" Height="34" Padding="10,0">
+                <Grid VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Path Grid.Column="0" Data="{StaticResource IconSearch}" Fill="{StaticResource TextMutedBrush}"
+                          Width="12" Height="12" Stretch="Uniform" Margin="0,0,8,0" VerticalAlignment="Center" />
+
+                    <TextBox Grid.Column="1" x:Name="SearchBox"
+                             Background="Transparent" BorderThickness="0"
+                             Foreground="{StaticResource TextPrimaryBrush}"
+                             FontSize="12.5" VerticalAlignment="Center" />
+
+                    <TextBlock Grid.Column="1" Text="Filter by hostname, IP, MAC or vendor..."
+                               Foreground="{StaticResource TextMutedBrush}"
+                               FontSize="12" IsHitTestVisible="False" VerticalAlignment="Center">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Text, ElementName=SearchBox}" Value="">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Grid>
+            </Border>
+
+            <!-- Dropdown filters -->
+            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                <ComboBox x:Name="StatusFilterCombo" SelectedIndex="0" Width="110" Height="32" Margin="0,0,8,0">
+                    <ComboBoxItem Content="All Status" />
+                    <ComboBoxItem Content="Online" />
+                    <ComboBoxItem Content="Blocked" />
+                    <ComboBoxItem Content="Offline" />
+                </ComboBox>
+
+                <ComboBox x:Name="TypeFilterCombo" SelectedIndex="0" Width="120" Height="32" Margin="0,0,8,0">
+                    <ComboBoxItem Content="All Types" />
+                    <ComboBoxItem Content="Laptop" />
+                    <ComboBoxItem Content="Desktop" />
+                    <ComboBoxItem Content="Television" />
+                    <ComboBoxItem Content="Printer" />
+                    <ComboBoxItem Content="Voice Control" />
+                    <ComboBoxItem Content="Smart Device" />
+                    <ComboBoxItem Content="Mobile" />
+                    <ComboBoxItem Content="Router" />
+                    <ComboBoxItem Content="Generic" />
+                </ComboBox>
+
+                <ComboBox x:Name="BrandFilterCombo" SelectedIndex="0" Width="110" Height="32" Margin="0,0,8,0">
+                    <ComboBoxItem Content="All Brands" />
+                </ComboBox>
+
+                <!-- Sort Toggle Button -->
+                <Button Content="Sort Status" Style="{StaticResource TopNavButtonStyle}" Click="SortByStatus_Click" Height="32">
+                    <Button.ToolTip>
+                        <ToolTip Content="Sort by Blocked / Online status" />
+                    </Button.ToolTip>
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <!-- ── Row 2: Clean Device Table ── -->
+        <Border Grid.Row="2" Style="{StaticResource FingCardStyle}" Padding="0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="38" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <!-- Table Header (No fake checkboxes!) -->
+                <Border Grid.Row="0" BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="0,0,0,1" Padding="16,0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="130" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="180" />
+                            <ColumnDefinition Width="170" />
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="100" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="TYPE" FontWeight="Bold" FontSize="11" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="1" Text="MODEL &amp; VENDOR" FontWeight="Bold" FontSize="11" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="2" Text="DEVICE NAME" FontWeight="Bold" FontSize="11" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="3" Text="IP &amp; MAC ADDRESS" FontWeight="Bold" FontSize="11" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="4" Text="STATUS" FontWeight="Bold" FontSize="11" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="5" Text="LAST SEEN" FontWeight="Bold" FontSize="11" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,8,0" />
+                    </Grid>
+                </Border>
+
+                <!-- Table Rows ListView -->
+                <ListView Grid.Row="1" x:Name="DeviceListViewControl"
+                          Background="Transparent" BorderThickness="0"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                          SelectionMode="Single"
+                          MouseDoubleClick="DeviceListView_MouseDoubleClick"
+                          SelectionChanged="DeviceListView_SelectionChanged">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Background" Value="Transparent" />
+                            <Setter Property="BorderThickness" Value="0,0,0,1" />
+                            <Setter Property="BorderBrush" Value="#141C2E" />
+                            <Setter Property="Height" Value="48" />
+                            <Setter Property="Padding" Value="16,0" />
+                            <Setter Property="Cursor" Value="Hand" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListViewItem">
+                                        <Border x:Name="itemBorder"
+                                                Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                Padding="{TemplateBinding Padding}">
+                                            <ContentPresenter VerticalAlignment="Center" />
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="itemBorder" Property="Background" Value="#18233C" />
+                                            </Trigger>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter TargetName="itemBorder" Property="Background" Value="#1A2846" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate DataType="{x:Type models:DeviceItem}">
+                            <Grid VerticalAlignment="Center">
+                                <Grid.ContextMenu>
+                                    <ContextMenu Background="#0E1524" BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="1">
+                                        <MenuItem Header="Inspect Device Details" Click="InspectDevice_Click" Foreground="#F8FAFC" FontWeight="SemiBold" />
+                                        <Separator Background="#1E293B" />
+                                        <MenuItem Header="Block Network Access" Click="BlockContext_Click" Foreground="#F87171" FontWeight="SemiBold" />
+                                        <MenuItem Header="Restore Network Access" Click="UnblockContext_Click" Foreground="#34D399" />
+                                        <Separator Background="#1E293B" />
+                                        <MenuItem Header="Copy IP Address" Click="CopyIp_Click" Foreground="#CBD5E1" />
+                                        <MenuItem Header="Copy MAC Address" Click="CopyMac_Click" Foreground="#CBD5E1" />
+                                    </ContextMenu>
+                                </Grid.ContextMenu>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="130" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="180" />
+                                    <ColumnDefinition Width="170" />
+                                    <ColumnDefinition Width="100" />
+                                    <ColumnDefinition Width="100" />
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Col 0: Type with Vector Path Icon -->
+                                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                                    <Path Width="14" Height="14" Stretch="Uniform" Fill="{StaticResource AccentCyanBrush}" Margin="0,0,8,0" VerticalAlignment="Center">
+                                        <Path.Style>
+                                            <Style TargetType="Path">
+                                                <Setter Property="Data" Value="{StaticResource IconGeneric}" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding DeviceType}" Value="laptop">
+                                                        <Setter Property="Data" Value="{StaticResource IconLaptop}" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding DeviceType}" Value="desktop">
+                                                        <Setter Property="Data" Value="{StaticResource IconDesktop}" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding DeviceType}" Value="television">
+                                                        <Setter Property="Data" Value="{StaticResource IconTv}" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding DeviceType}" Value="printer">
+                                                        <Setter Property="Data" Value="{StaticResource IconPrinter}" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding DeviceType}" Value="phone">
+                                                        <Setter Property="Data" Value="{StaticResource IconMobile}" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding DeviceType}" Value="smartphone">
+                                                        <Setter Property="Data" Value="{StaticResource IconMobile}" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding DeviceType}" Value="tablet">
+                                                        <Setter Property="Data" Value="{StaticResource IconMobile}" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding DeviceType}" Value="router">
+                                                        <Setter Property="Data" Value="{StaticResource IconRouter}" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding DeviceType}" Value="gateway">
+                                                        <Setter Property="Data" Value="{StaticResource IconRouter}" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Path.Style>
+                                    </Path>
+                                    <TextBlock Text="{Binding TypeDisplay}" FontSize="12.5" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center" />
+                                </StackPanel>
+
+                                <!-- Col 1: Model & Vendor -->
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,10,0">
+                                    <TextBlock Text="{Binding Model}" FontWeight="SemiBold" FontSize="13"
+                                               Foreground="{StaticResource TextPrimaryBrush}"
+                                               TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Text="{Binding Vendor}" FontSize="11" Foreground="{StaticResource TextMutedBrush}"
+                                               TextTrimming="CharacterEllipsis" Margin="0,1,0,0" />
+                                </StackPanel>
+
+                                <!-- Col 2: Name / Hostname -->
+                                <TextBlock Grid.Column="2" Text="{Binding DisplayName}"
+                                           FontSize="13" Foreground="{StaticResource TextSecondaryBrush}"
+                                           TextTrimming="CharacterEllipsis"
+                                           VerticalAlignment="Center" Margin="0,0,10,0" />
+
+                                <!-- Col 3: IP & MAC -->
+                                <StackPanel Grid.Column="3" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding Ip}" FontSize="12.5" FontWeight="SemiBold"
+                                               Foreground="{StaticResource TextPrimaryBrush}" />
+                                    <TextBlock Text="{Binding MacUpper}" FontSize="10.5" FontFamily="Consolas, Cascadia Code, Courier New"
+                                               Foreground="{StaticResource TextMutedBrush}" Margin="0,1,0,0" />
+                                </StackPanel>
+
+                                <!-- Col 4: Status Badge -->
+                                <Border Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                        CornerRadius="11" Height="22" Width="72"
+                                        BorderThickness="1">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsBlocked}" Value="True">
+                                                    <Setter Property="Background" Value="#33161C" />
+                                                    <Setter Property="BorderBrush" Value="#542129" />
+                                                </DataTrigger>
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding IsBlocked}" Value="False" />
+                                                        <Condition Binding="{Binding IsOnline}" Value="True" />
+                                                    </MultiDataTrigger.Conditions>
+                                                    <Setter Property="Background" Value="#0F2B23" />
+                                                    <Setter Property="BorderBrush" Value="#174738" />
+                                                </MultiDataTrigger>
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding IsBlocked}" Value="False" />
+                                                        <Condition Binding="{Binding IsOnline}" Value="False" />
+                                                    </MultiDataTrigger.Conditions>
+                                                    <Setter Property="Background" Value="#1C2438" />
+                                                    <Setter Property="BorderBrush" Value="#28344F" />
+                                                </MultiDataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <!-- Dot indicator -->
+                                        <Border Width="5" Height="5" CornerRadius="2.5" Margin="0,0,5,0" VerticalAlignment="Center">
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsBlocked}" Value="True">
+                                                            <Setter Property="Background" Value="#EF4444" />
+                                                        </DataTrigger>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding IsBlocked}" Value="False" />
+                                                                <Condition Binding="{Binding IsOnline}" Value="True" />
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="Background" Value="#10B981" />
+                                                        </MultiDataTrigger>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding IsBlocked}" Value="False" />
+                                                                <Condition Binding="{Binding IsOnline}" Value="False" />
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="Background" Value="#94A3B8" />
+                                                        </MultiDataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+                                        </Border>
+                                        <TextBlock Text="{Binding StatusText}"
+                                                   FontSize="11" FontWeight="SemiBold"
+                                                   VerticalAlignment="Center">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsBlocked}" Value="True">
+                                                            <Setter Property="Foreground" Value="#F87171" />
+                                                        </DataTrigger>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding IsBlocked}" Value="False" />
+                                                                <Condition Binding="{Binding IsOnline}" Value="True" />
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="Foreground" Value="#34D399" />
+                                                        </MultiDataTrigger>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding IsBlocked}" Value="False" />
+                                                                <Condition Binding="{Binding IsOnline}" Value="False" />
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="Foreground" Value="#94A3B8" />
+                                                        </MultiDataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Col 5: Last Seen -->
+                                <TextBlock Grid.Column="5" Text="{Binding LastUpdateText}"
+                                           FontSize="11.5" Foreground="{StaticResource TextMutedBrush}"
+                                           HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,8,0" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+        </Border>
+
+        <!-- ── Row 3: Bottom Inventory Status Strip (No Dead Buttons!) ── -->
+        <Grid Grid.Row="3" Margin="0,14,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" x:Name="PaginationBlock" Text="Showing 0 of 0 active devices on subnet"
+                       Foreground="{StaticResource TextMutedBrush}" FontSize="12"
+                       VerticalAlignment="Center" />
+
+            <TextBlock Grid.Column="1" Text="Right-click any host to block or copy credentials"
+                       Foreground="{StaticResource TextMutedBrush}" FontSize="11"
+                       VerticalAlignment="Center" />
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,33 @@
+# Build and binary outputs
+bin/
+obj/
+publish/
+publish_standalone/
+NetSentry.App/bin/
+NetSentry.App/obj/
+NetSentry.App/publish_standalone/
+*.exe
+*.dll
+*.pdb
+*.user
+*.suo
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Databases and local runtime logs
+devices.db
+*.db
+*.log
+crash.log
+app_debug.log
+
+# IDE & OS files
+.vs/
+.idea/
+.vscode/
+[Tt]humbs.db
