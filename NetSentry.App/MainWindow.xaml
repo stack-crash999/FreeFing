@@ -27,7 +27,7 @@
                 <TextBlock DockPanel.Dock="Top" Text="&#xE774;" FontFamily="Segoe MDL2 Assets" 
                            Foreground="#2563EB" FontSize="22" HorizontalAlignment="Center" Margin="0,18,0,24"/>
 
-                <!-- Navigation Tabs: Overview, Devices (Computer Icon), Security -->
+                <!-- Navigation Tabs: Overview, Devices (Computer Icon), Security, Setup -->
                 <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Center">
                     <!-- Tab 1: Overview -->
                     <Button x:Name="NavOverviewBtn" Style="{StaticResource NavIconButtonStyle}" 
@@ -40,11 +40,11 @@
                     <!-- Tab 3: Security -->
                     <Button x:Name="NavSecurityBtn" Style="{StaticResource NavIconButtonStyle}" 
                             Content="&#xEBE8;" ToolTip="Security &amp; Defense" Click="NavSecurity_Click" Margin="0,0,0,12"/>
-                </StackPanel>
 
-                <!-- Settings Tab -->
-                <Button x:Name="NavSettingsBtn" DockPanel.Dock="Bottom" Style="{StaticResource NavIconButtonStyle}" 
-                        Content="&#xE713;" ToolTip="System Settings" Click="NavSettings_Click" Margin="0,0,0,18"/>
+                    <!-- Tab 4: Setup (Gear/Preferences Icon &#xE713;) -->
+                    <Button x:Name="NavSetupBtn" Style="{StaticResource NavIconButtonStyle}" 
+                            Content="&#xE713;" ToolTip="Setup &amp; Preferences" Click="NavSetup_Click" Margin="0,0,0,12"/>
+                </StackPanel>
             </DockPanel>
         </Border>
 
@@ -82,7 +82,7 @@
                         <TextBlock x:Name="TopSubnetBlock" Text="Connected to Home Subnet • 192.168.1.0/24" FontSize="12" Foreground="#94A3B8" Margin="0,3,0,0" />
                     </StackPanel>
 
-                    <!-- Top Navigation Tabs (Overview, Devices, Security, Settings) -->
+                    <!-- Top Navigation Tabs (Overview, Devices, Security, Setup) -->
                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,20,0">
                         <Button x:Name="TopTabOverview" Content="Overview" Click="NavOverview_Click"
                                 Style="{StaticResource TopNavButtonStyle}" Margin="0,0,6,0" Padding="14,6" />
@@ -90,7 +90,7 @@
                                 Style="{StaticResource TopNavButtonStyle}" Margin="0,0,6,0" Padding="14,6" />
                         <Button x:Name="TopTabSecurity" Content="Security" Click="NavSecurity_Click"
                                 Style="{StaticResource TopNavButtonStyle}" Margin="0,0,6,0" Padding="14,6" />
-                        <Button x:Name="TopTabSettings" Content="Settings" Click="NavSettings_Click"
+                        <Button x:Name="TopTabSetup" Content="Setup" Click="NavSetup_Click"
                                 Style="{StaticResource TopNavButtonStyle}" Padding="14,6" />
                     </StackPanel>
 
@@ -117,8 +117,8 @@
                 <!-- Page 4: Security View (Firewall status, isolated devices list with unblock controls) -->
                 <views:SecurityView x:Name="SecurityControl" Visibility="Collapsed" />
 
-                <!-- Page 5: Settings View (Adapter bindings, scan frequencies, database diagnostics) -->
-                <views:SettingsView x:Name="SettingsControl" Visibility="Collapsed" />
+                <!-- Page 5: Setup View (Network scanning, ARP blocking parameters, adapter bindings, database diagnostics) -->
+                <views:SetupView x:Name="SetupControl" Visibility="Collapsed" />
             </Grid>
         </Grid>
     </Grid>

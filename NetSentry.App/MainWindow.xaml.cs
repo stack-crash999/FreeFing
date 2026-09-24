@@ -43,7 +43,7 @@ namespace NetSentry.App
             WireDeviceListEvents();
             WireDeviceDetailEvents();
             WireSecurityEvents();
-            WireSettingsEvents();
+            WireSetupEvents();
 
             // Python Bridge Events
             _bridge.DeviceFound += OnDeviceFound;
@@ -100,15 +100,24 @@ namespace NetSentry.App
             SecurityControl.UnblockRequested += async (mac) => await UnblockDeviceAsync(mac);
         }
 
-        private void WireSettingsEvents()
+        private void WireSetupEvents()
         {
-            SettingsControl.ClearDatabaseRequested += async () =>
+            SetupControl.ClearDatabaseRequested += async () =>
             {
                 await _bridge.SendCommandAsync("clear_devices");
                 _devices.Clear();
                 DeviceListControl.SetDevices(_devices);
                 UpdateSubviewsHud();
                 OverviewControl.AppendLog("[DATABASE] Cache database purged by user request.");
+            };
+
+            SetupControl.SetupSaved += (cfg) =>
+            {
+                if (_telemetryTimer != null)
+                {
+                    _telemetryTimer.Interval = TimeSpan.FromSeconds(Math.Max(5, cfg.ScanIntervalSeconds));
+                }
+                OverviewControl.AppendLog($"[SETUP] Configuration applied: Interval={cfg.ScanIntervalSeconds}s, Timeout={cfg.ScanTimeoutSeconds}s, DeepScan={cfg.DeepScanEnabled}, ARP={cfg.ArpIntervalSeconds}s");
             };
         }
 
@@ -159,7 +168,7 @@ namespace NetSentry.App
             DeviceListControl.Visibility = (activeView == DeviceListControl) ? Visibility.Visible : Visibility.Collapsed;
             DeviceDetailControl.Visibility = (activeView == DeviceDetailControl) ? Visibility.Visible : Visibility.Collapsed;
             SecurityControl.Visibility = (activeView == SecurityControl) ? Visibility.Visible : Visibility.Collapsed;
-            SettingsControl.Visibility = (activeView == SettingsControl) ? Visibility.Visible : Visibility.Collapsed;
+            SetupControl.Visibility = (activeView == SetupControl) ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void ShowTab(string tabName)
@@ -186,17 +195,17 @@ namespace NetSentry.App
                     HighlightNav(NavSecurityBtn, TopTabSecurity);
                     break;
 
-                case "Settings":
-                    SettingsControl.SetNetworkSettings("Primary Adapter", _currentLocalIp, _currentSubnet, _currentGatewayIp);
-                    ShowView(SettingsControl);
-                    HighlightNav(NavSettingsBtn, TopTabSettings);
+                case "Setup":
+                    SetupControl.SetNetworkSettings("Primary Adapter", _currentLocalIp, _currentSubnet, _currentGatewayIp);
+                    ShowView(SetupControl);
+                    HighlightNav(NavSetupBtn, TopTabSetup);
                     break;
             }
         }
 
         private void ResetNavTabVisuals()
         {
-            Button[] railButtons = { NavOverviewBtn, NavDevicesBtn, NavSecurityBtn, NavSettingsBtn };
+            Button[] railButtons = { NavOverviewBtn, NavDevicesBtn, NavSecurityBtn, NavSetupBtn };
             foreach (var b in railButtons)
             {
                 if (b != null)
@@ -206,7 +215,7 @@ namespace NetSentry.App
                 }
             }
 
-            Button[] topButtons = { TopTabOverview, TopTabDevices, TopTabSecurity, TopTabSettings };
+            Button[] topButtons = { TopTabOverview, TopTabDevices, TopTabSecurity, TopTabSetup };
             foreach (var b in topButtons)
             {
                 if (b != null)
@@ -235,7 +244,7 @@ namespace NetSentry.App
         private void NavOverview_Click(object sender, RoutedEventArgs e) => ShowTab("Overview");
         private void NavDevices_Click(object sender, RoutedEventArgs e) => ShowTab("Devices");
         private void NavSecurity_Click(object sender, RoutedEventArgs e) => ShowTab("Security");
-        private void NavSettings_Click(object sender, RoutedEventArgs e) => ShowTab("Settings");
+        private void NavSetup_Click(object sender, RoutedEventArgs e) => ShowTab("Setup");
 
         #endregion
 
@@ -387,7 +396,7 @@ namespace NetSentry.App
             OverviewControl.SetNetworkInfo(ssid, localIp, subnet, gateway, string.IsNullOrEmpty(_currentGatewayMac) ? "--" : _currentGatewayMac, publicIp, isp, 7.8);
             DeviceListControl.SetNetworkName(ssid);
             SecurityControl.SetGatewayInfo(gateway);
-            SettingsControl.SetNetworkSettings("Default Adapter", localIp, subnet, gateway);
+            SetupControl.SetNetworkSettings("Default Adapter", localIp, subnet, gateway);
 
             UpdateSubviewsHud();
         }

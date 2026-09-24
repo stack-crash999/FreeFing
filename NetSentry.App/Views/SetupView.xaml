@@ -1,0 +1,239 @@
+<UserControl x:Class="NetSentry.App.Views.SetupView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" 
+             d:DesignHeight="850" d:DesignWidth="1100"
+             Background="#0E131F">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="32,28,32,28">
+        <StackPanel MaxWidth="1200" HorizontalAlignment="Stretch">
+
+            <!-- ── Top Header Row ── -->
+            <Grid Margin="0,0,0,24">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="&#xE713;" FontFamily="Segoe MDL2 Assets" FontSize="22" Foreground="#2563EB" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="Setup &amp; Preferences" FontSize="24" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
+                        <Border Background="#1A2563EB" BorderBrush="#2563EB" BorderThickness="1" CornerRadius="6" Padding="8,2" Margin="14,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="Configuration Hub" FontSize="11" FontWeight="SemiBold" Foreground="#38BDF8"/>
+                        </Border>
+                    </StackPanel>
+                    <TextBlock Text="Configure network scanner timings, ARP isolation parameters, and adapter bindings"
+                               FontSize="13" Foreground="#94A3B8" Margin="32,4,0,0" />
+                </StackPanel>
+
+                <!-- Save Feedback Banner -->
+                <Border Grid.Column="1" x:Name="SaveNotificationBorder" Background="#1A10B981" BorderBrush="#10B981" BorderThickness="1" CornerRadius="8" Padding="14,8" Visibility="Collapsed" VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="&#xE73E;" FontFamily="Segoe MDL2 Assets" FontSize="14" Foreground="#10B981" Margin="0,0,8,0" VerticalAlignment="Center" />
+                        <TextBlock Text="Setup saved and applied successfully!" FontSize="12.5" FontWeight="SemiBold" Foreground="#10B981" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- ── 2 Columns of Settings ── -->
+            <Grid Margin="0,0,0,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="24" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- ════════ LEFT COLUMN: NETWORK SCANNING & INTERNET BLOCKING ════════ -->
+                <StackPanel Grid.Column="0">
+
+                    <!-- 1. Network Scanning Group (from Python version) -->
+                    <Border Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="20,18" Margin="0,0,0,20">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                                <TextBlock Text="&#xE80F;" FontFamily="Segoe MDL2 Assets" FontSize="15" Foreground="#38BDF8" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="NETWORK SCANNING SETUP" FontSize="11.5" FontWeight="Bold" Foreground="#64748B" VerticalAlignment="Center"/>
+                            </StackPanel>
+
+                            <!-- Scan Timeout -->
+                            <Grid Margin="0,0,0,16">
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="Scan Timeout" Foreground="White" FontSize="13" FontWeight="SemiBold"/>
+                                    <TextBlock Text="Maximum response wait time per discovery probe" Foreground="#94A3B8" FontSize="11.5" Margin="0,2,0,0"/>
+                                </StackPanel>
+                                <ComboBox x:Name="ScanTimeoutCombo" SelectedIndex="1" Width="140" Height="32" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                    <ComboBoxItem Content="1 second" Tag="1"/>
+                                    <ComboBoxItem Content="3 seconds" Tag="3"/>
+                                    <ComboBoxItem Content="5 seconds" Tag="5"/>
+                                    <ComboBoxItem Content="10 seconds" Tag="10"/>
+                                </ComboBox>
+                            </Grid>
+
+                            <!-- Enable Auto-Scan -->
+                            <Grid Margin="0,0,0,16">
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="Periodic Auto-Scanning" Foreground="White" FontSize="13" FontWeight="SemiBold"/>
+                                    <TextBlock Text="Automatically sweep the subnet on a timed interval" Foreground="#94A3B8" FontSize="11.5" Margin="0,2,0,0"/>
+                                </StackPanel>
+                                <CheckBox x:Name="AutoScanCheckBox" IsChecked="True" Content="Enabled" Foreground="#38BDF8" FontWeight="SemiBold" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                            </Grid>
+
+                            <!-- Scan Interval -->
+                            <Grid Margin="0,0,0,16">
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="Scan Interval" Foreground="White" FontSize="13" FontWeight="SemiBold"/>
+                                    <TextBlock Text="Frequency between automated discovery sweeps" Foreground="#94A3B8" FontSize="11.5" Margin="0,2,0,0"/>
+                                </StackPanel>
+                                <ComboBox x:Name="ScanIntervalCombo" SelectedIndex="1" Width="140" Height="32" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                    <ComboBoxItem Content="30 seconds" Tag="30"/>
+                                    <ComboBoxItem Content="60 seconds" Tag="60"/>
+                                    <ComboBoxItem Content="120 seconds" Tag="120"/>
+                                    <ComboBoxItem Content="300 seconds" Tag="300"/>
+                                </ComboBox>
+                            </Grid>
+
+                            <!-- Deep Port Scanning & Fingerprinting -->
+                            <Grid>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="Port Scanning &amp; Service Fingerprinting" Foreground="White" FontSize="13" FontWeight="SemiBold"/>
+                                    <TextBlock Text="Audit open ports (HTTP, SSH, SMB) for exact model detection" Foreground="#94A3B8" FontSize="11.5" Margin="0,2,0,0"/>
+                                </StackPanel>
+                                <CheckBox x:Name="DeepScanCheckBox" IsChecked="True" Content="Enabled" Foreground="#38BDF8" FontWeight="SemiBold" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- 2. Internet Blocking & ARP Engine (from Python version) -->
+                    <Border Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="20,18">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                                <TextBlock Text="&#xEBE8;" FontFamily="Segoe MDL2 Assets" FontSize="15" Foreground="#F43F5E" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="INTERNET BLOCKING &amp; ARP ENGINE" FontSize="11.5" FontWeight="Bold" Foreground="#64748B" VerticalAlignment="Center"/>
+                            </StackPanel>
+
+                            <!-- ARP Packet Interval -->
+                            <Grid Margin="0,0,0,16">
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="ARP Packet Interval" Foreground="White" FontSize="13" FontWeight="SemiBold"/>
+                                    <TextBlock Text="Frequency of spoofed ARP replies sent to isolated hosts" Foreground="#94A3B8" FontSize="11.5" Margin="0,2,0,0"/>
+                                </StackPanel>
+                                <ComboBox x:Name="ArpIntervalCombo" SelectedIndex="0" Width="140" Height="32" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                    <ComboBoxItem Content="1 second (Fast)" Tag="1"/>
+                                    <ComboBoxItem Content="2 seconds" Tag="2"/>
+                                    <ComboBoxItem Content="5 seconds" Tag="5"/>
+                                </ComboBox>
+                            </Grid>
+
+                            <!-- Auto-Restore on Exit -->
+                            <Grid Margin="0,0,0,16">
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="Auto-Restore ARP on Exit" Foreground="White" FontSize="13" FontWeight="SemiBold"/>
+                                    <TextBlock Text="Unblock all devices and repair ARP tables when app closes" Foreground="#94A3B8" FontSize="11.5" Margin="0,2,0,0"/>
+                                </StackPanel>
+                                <CheckBox x:Name="AutoRestoreCheckBox" IsChecked="True" Content="Recommended" Foreground="#10B981" FontWeight="SemiBold" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                            </Grid>
+
+                            <!-- Windows Firewall Integration -->
+                            <Grid>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="Windows Firewall Rules Integration" Foreground="White" FontSize="13" FontWeight="SemiBold"/>
+                                    <TextBlock Text="Also inject local inbound/outbound Windows Firewall blocking rules" Foreground="#94A3B8" FontSize="11.5" Margin="0,2,0,0"/>
+                                </StackPanel>
+                                <CheckBox x:Name="FirewallRulesCheckBox" IsChecked="False" Content="Enabled" Foreground="#94A3B8" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- ════════ RIGHT COLUMN: ADAPTER, CACHE DIAGNOSTICS & ABOUT ════════ -->
+                <StackPanel Grid.Column="2">
+
+                    <!-- 3. Active Network Adapter Setup -->
+                    <Border Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="20,18" Margin="0,0,0,20">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                                <TextBlock Text="&#xE774;" FontFamily="Segoe MDL2 Assets" FontSize="15" Foreground="#38BDF8" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="ACTIVE NETWORK ADAPTER SETUP" FontSize="11.5" FontWeight="Bold" Foreground="#64748B" VerticalAlignment="Center"/>
+                            </StackPanel>
+
+                            <Grid Margin="0,0,0,12">
+                                <TextBlock Text="Interface Name" Foreground="#94A3B8" FontSize="13" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="AdapterNameBlock" Text="Primary Wi-Fi / Ethernet" Foreground="White" FontWeight="SemiBold" FontSize="13" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                            </Grid>
+                            <Grid Margin="0,0,0,12">
+                                <TextBlock Text="Local IPv4 Address" Foreground="#94A3B8" FontSize="13" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="AdapterIpBlock" Text="192.168.1.100" Foreground="#38BDF8" FontFamily="Consolas, Cascadia Code" FontWeight="SemiBold" FontSize="13" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                            </Grid>
+                            <Grid Margin="0,0,0,12">
+                                <TextBlock Text="Active Subnet CIDR" Foreground="#94A3B8" FontSize="13" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="AdapterSubnetBlock" Text="192.168.1.0/24" Foreground="White" FontFamily="Consolas, Cascadia Code" FontSize="13" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                            </Grid>
+                            <Grid>
+                                <TextBlock Text="Default Gateway IP" Foreground="#94A3B8" FontSize="13" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="AdapterGatewayBlock" Text="192.168.1.1" Foreground="#10B981" FontFamily="Consolas, Cascadia Code" FontWeight="SemiBold" FontSize="13" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- 4. Cache & Diagnostics -->
+                    <Border Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="20,18" Margin="0,0,0,20">
+                        <StackPanel>
+                            <TextBlock Text="CACHE &amp; DATABASE DIAGNOSTICS" FontSize="11.5" FontWeight="Bold" Foreground="#64748B" Margin="0,0,0,12"/>
+                            <TextBlock Text="Device identities, custom names, and hardware OUI vendor tables are cached in a high-speed SQLite database."
+                                       FontSize="12" Foreground="#94A3B8" TextWrapping="Wrap" Margin="0,0,0,16" LineHeight="17"/>
+
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="Clear Cache Database" Click="ClearDb_Click"
+                                        Style="{StaticResource TopNavButtonStyle}" Padding="14,8" Margin="0,0,12,0"/>
+                                <Button Content="Test Scanner Bridge" Click="TestBridge_Click"
+                                        Style="{StaticResource TopNavButtonStyle}" Padding="14,8"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- 5. About (from Python version) -->
+                    <Border Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="20,18">
+                        <StackPanel>
+                            <TextBlock Text="ABOUT NETSENTRY / FREEFING" FontSize="11.5" FontWeight="Bold" Foreground="#64748B" Margin="0,0,0,14"/>
+
+                            <Grid Margin="0,0,0,8">
+                                <TextBlock Text="Product Name" Foreground="#94A3B8" FontSize="12.5" VerticalAlignment="Center"/>
+                                <TextBlock Text="FreeFing Desktop (NetSentry)" Foreground="White" FontWeight="Bold" FontSize="12.5" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                            </Grid>
+                            <Grid Margin="0,0,0,8">
+                                <TextBlock Text="Version" Foreground="#94A3B8" FontSize="12.5" VerticalAlignment="Center"/>
+                                <TextBlock Text="v2.4.0 (Enterprise Build)" Foreground="#38BDF8" FontWeight="SemiBold" FontSize="12.5" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                            </Grid>
+                            <Grid Margin="0,0,0,8">
+                                <TextBlock Text="Technology Stack" Foreground="#94A3B8" FontSize="12.5" VerticalAlignment="Center"/>
+                                <TextBlock Text="C# WPF .NET 10 (Win-x64 Standalone)" Foreground="White" FontSize="12" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                            </Grid>
+                            <Grid Margin="0,0,0,8">
+                                <TextBlock Text="Repository" Foreground="#94A3B8" FontSize="12.5" VerticalAlignment="Center"/>
+                                <TextBlock Text="stack-crash999/FreeFing" Foreground="#94A3B8" FontSize="12" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                            </Grid>
+
+                            <TextBlock Text="Inspired by Fing Network Scanner. Built for seamless local network monitoring, hardware identification, and ARP hardware isolation."
+                                       FontSize="11.5" Foreground="#64748B" TextWrapping="Wrap" Margin="0,8,0,0" LineHeight="16"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+
+            <!-- ── Bottom Action Bar: Save Settings ── -->
+            <Border Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="20,14">
+                <Grid>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="Changes apply immediately to live background scanning and defense routines." FontSize="12" Foreground="#94A3B8" VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <Button Content="Save &amp; Apply Setup" Click="SaveSetup_Click"
+                            Style="{StaticResource ScanButtonStyle}"
+                            HorizontalAlignment="Right" Padding="22,9" Height="38"/>
+                </Grid>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
