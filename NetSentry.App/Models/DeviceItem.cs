@@ -259,6 +259,50 @@ namespace NetSentry.App.Models
                     ? new SolidColorBrush(Color.FromRgb(0xF5, 0x9E, 0x0B))
                     : new SolidColorBrush(Color.FromRgb(0x10, 0xB9, 0x81))));
 
+        // ── Fing Desktop UI ViewModel Contract Properties ──
+        public string Name => DisplayName;
+        public string IpAddress => Ip;
+        public string MacAddress => MacUpper;
+
+        public string IconGlyph => (_deviceType?.ToLowerInvariant()) switch
+        {
+            "laptop" => "\xE7F8",
+            "desktop" => "\xE7F5",
+            "television" or "tv" => "\xE7F4",
+            "phone" or "smartphone" => "\xE8EA",
+            "tablet" => "\xE70A",
+            "router" or "gateway" => "\xE700",
+            "printer" => "\xE749",
+            "server" => "\xE968",
+            _ => "\xE770"
+        };
+
+        public string StatusBackground => IsBlocked ? "#1AF43F5E" : (IsOnline ? "#1A10B981" : "#1A64748B");
+        public string StatusForeground => IsBlocked ? "#F43F5E" : (IsOnline ? "#10B981" : "#64748B");
+        public string ActionButtonText => IsBlocked ? "Unblock" : "Block";
+        public string ActionBackground => IsBlocked ? "#F43F5E" : "#1E293B";
+        public string ActionForeground => IsBlocked ? "#FFFFFF" : "#CBD5E1";
+
+        public Brush StatusBackgroundBrush => IsBlocked
+            ? new SolidColorBrush(Color.FromArgb(0x22, 0xF4, 0x3F, 0x5E))
+            : (IsOnline
+                ? new SolidColorBrush(Color.FromArgb(0x22, 0x10, 0xB9, 0x81))
+                : new SolidColorBrush(Color.FromArgb(0x22, 0x64, 0x74, 0x8B)));
+
+        public Brush StatusForegroundBrush => IsBlocked
+            ? new SolidColorBrush(Color.FromRgb(0xF4, 0x3F, 0x5E))
+            : (IsOnline
+                ? new SolidColorBrush(Color.FromRgb(0x10, 0xB9, 0x81))
+                : new SolidColorBrush(Color.FromRgb(0x94, 0xA3, 0xB8)));
+
+        public Brush ActionBackgroundBrush => IsBlocked
+            ? new SolidColorBrush(Color.FromRgb(0xF4, 0x3F, 0x5E))
+            : new SolidColorBrush(Color.FromRgb(0x1E, 0x29, 0x3B));
+
+        public Brush ActionForegroundBrush => IsBlocked
+            ? new SolidColorBrush(Color.FromRgb(0xFF, 0xFF, 0xFF))
+            : new SolidColorBrush(Color.FromRgb(0xCB, 0xD5, 0xE1));
+
         public void EnsureDefaultPortsAndLink()
         {
             if (_openPorts.Count > 0 && !string.IsNullOrEmpty(_physicalLinkSummary)) return;

@@ -3,249 +3,197 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:views="clr-namespace:NetSentry.App.Views"
+        xmlns:models="clr-namespace:NetSentry.App.Models"
         mc:Ignorable="d"
-        Title="Command Deck — NetSentry Network Defense &amp; Discovery"
-        Height="880" Width="1360"
-        MinHeight="720" MinWidth="1100"
+        Title="NetGuardian Desktop"
+        Width="1280" Height="820"
+        MinHeight="680" MinWidth="1024"
         WindowStartupLocation="CenterScreen"
-        Background="{StaticResource BrushCanvas}"
+        Background="#0E131F"
         Loaded="Window_Loaded" Closing="Window_Closing">
 
-    <Grid Background="{StaticResource BrushCanvas}">
+    <Grid Background="#0E131F">
         <Grid.ColumnDefinitions>
-            <!-- 1. Left Navigation Rail -->
-            <ColumnDefinition Width="68" />
-            <!-- 2. Main Command Deck Area -->
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="68"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <!-- ══════════════════════════════════════════════
-             1. LEFT NAVIGATION RAIL (SLIM GLASS STRIP)
+             LEFT NAVIGATION RAIL
              ══════════════════════════════════════════════ -->
-        <Border Grid.Column="0" Background="#0C0F17" BorderBrush="{StaticResource BrushBorderGlass}" BorderThickness="0,0,1,0">
+        <Border Grid.Column="0" Background="#121824" BorderBrush="#1C2436" BorderThickness="0,0,1,0">
             <DockPanel LastChildFill="False">
-                <!-- Brand Shield Glyph -->
-                <Border DockPanel.Dock="Top" Margin="0,18,0,24" HorizontalAlignment="Center">
-                    <Grid Width="42" Height="42" Cursor="Hand" ToolTip="NetSentry Command Deck">
-                        <Border CornerRadius="8" Background="#132438" BorderBrush="{StaticResource BrushElectricCyan}" BorderThickness="1" />
-                        <Path Data="{StaticResource IconShield}" Fill="{StaticResource BrushElectricCyan}" Width="18" Height="18" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    </Grid>
-                </Border>
+                <!-- Top Primary Brand Glyph -->
+                <TextBlock DockPanel.Dock="Top" Text="&#xE774;" FontFamily="Segoe MDL2 Assets" 
+                           Foreground="#2563EB" FontSize="20" HorizontalAlignment="Center" Margin="0,18,0,24"/>
 
-                <!-- Navigation Rail Buttons -->
+                <!-- Nav Buttons (Dashboard, Devices, Security) -->
                 <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Center">
-                    <!-- Dashboard / Overview -->
-                    <RadioButton x:Name="NavOverviewBtn" GroupName="Nav"
-                                 Style="{StaticResource StyleNavRailButton}" Tag="{StaticResource IconDashboard}"
-                                 IsChecked="True" Click="Nav_Overview_Click" ToolTip="Command Overview &amp; Audit Logs" />
-
-                    <!-- Device Fleet View -->
-                    <RadioButton x:Name="NavDevicesBtn" GroupName="Nav"
-                                 Style="{StaticResource StyleNavRailButton}" Tag="{StaticResource IconDevices}"
-                                 Click="Nav_Devices_Click" ToolTip="Monitored Device Fleet" />
-
-                    <!-- Port & Vulnerability Inspector -->
-                    <RadioButton x:Name="NavPortsBtn" GroupName="Nav"
-                                 Style="{StaticResource StyleNavRailButton}" Tag="{StaticResource IconPortInspector}"
-                                 Click="Nav_Ports_Click" ToolTip="Port &amp; Service Inspector" />
-
-                    <!-- Telemetry & Performance Monitor -->
-                    <RadioButton x:Name="NavPerfBtn" GroupName="Nav"
-                                 Style="{StaticResource StyleNavRailButton}" Tag="{StaticResource IconPerfMonitor}"
-                                 Click="Nav_Perf_Click" ToolTip="Jitter &amp; Latency Telemetry" />
+                    <Button Style="{StaticResource NavIconButtonStyle}" Content="&#xE80F;" ToolTip="Dashboard" Click="NavDashboard_Click" Margin="0,0,0,12"/>
+                    <Button Style="{StaticResource NavIconButtonStyle}" Content="&#xECC9;" ToolTip="Device Map" Click="NavDeviceMap_Click" Margin="0,0,0,12"/>
+                    <Button Style="{StaticResource NavIconButtonStyle}" Content="&#xEBE8;" ToolTip="Security" Click="NavSecurity_Click" Margin="0,0,0,12"/>
                 </StackPanel>
 
-                <!-- Bottom System Settings -->
-                <StackPanel DockPanel.Dock="Bottom" Margin="0,0,0,16" HorizontalAlignment="Center">
-                    <RadioButton x:Name="NavSettingsBtn" GroupName="Nav"
-                                 Style="{StaticResource StyleNavRailButton}" Tag="{StaticResource IconSettings}"
-                                 Click="Nav_Settings_Click" ToolTip="Engine &amp; Subnet Isolation Settings" />
-                </StackPanel>
+                <!-- Settings Button -->
+                <Button DockPanel.Dock="Bottom" Style="{StaticResource NavIconButtonStyle}" Content="&#xE713;" ToolTip="Settings" Click="NavSettings_Click" Margin="0,0,0,18"/>
             </DockPanel>
         </Border>
 
         <!-- ══════════════════════════════════════════════
-             2. MAIN COMMAND DECK AREA
+             MAIN CONTENT CANVAS
              ══════════════════════════════════════════════ -->
-        <Grid Grid.Column="1" Margin="24,20,24,20">
+        <Grid Grid.Column="1" Margin="32">
             <Grid.RowDefinitions>
-                <!-- Row 0: Top Summary HUD (4 Glass Cards) -->
-                <RowDefinition Height="Auto" />
-                <!-- Row 1: Radar Scan Banner -->
-                <RowDefinition Height="Auto" />
-                <!-- Row 2: Viewport (Fleet View / Overview / Details) -->
-                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- ──────────────────────────────────────────
-                 TOP SUMMARY HUD (4 BENTO GLASS CARDS)
-                 ────────────────────────────────────────── -->
-            <Grid Grid.Row="0" Margin="0,0,0,18">
+            <!-- ── Top Header & Actions ── -->
+            <Grid Grid.Row="0" Margin="0,0,0,24">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="14" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="14" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="14" />
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock Text="Network Overview" FontSize="24" FontWeight="SemiBold" Foreground="White"/>
+                    <TextBlock x:Name="SubnetSubtitleBlock" Text="Connected to Home Subnet • 192.168.1.0/24" FontSize="13" Foreground="#94A3B8" Margin="0,4,0,0"/>
+                </StackPanel>
+                <Button Grid.Column="1" x:Name="ScanBtn" Content="Scan Network" 
+                        Style="{StaticResource ScanButtonStyle}"
+                        Click="ScanBtn_Click"/>
+            </Grid>
+
+            <!-- ── Summary HUD Glass Cards ── -->
+            <Grid Grid.Row="1" Margin="0,0,0,24">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- CARD 1: ACTIVE SUBNET & GATEWAY -->
-                <Border Grid.Column="0" Style="{StaticResource StyleGlassCard}" Padding="16,13">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Path Data="{StaticResource IconWifi}" Fill="{StaticResource BrushElectricCyan}" Width="13" Height="13" Stretch="Uniform" Margin="0,0,7,0"/>
-                            <TextBlock Text="ACTIVE SUBNET" FontFamily="Segoe UI Variable Small" FontSize="11" FontWeight="Bold" Foreground="{StaticResource BrushTextMuted}"/>
-                        </StackPanel>
-                        <TextBlock Grid.Row="1" x:Name="HudSubnetVal" Text="192.168.1.0/24"
-                                   FontFamily="Cascadia Code, Consolas" FontSize="17" FontWeight="Bold" Foreground="{StaticResource BrushTextPrimary}" Margin="0,6,0,2"/>
-                        <TextBlock Grid.Row="2" x:Name="HudGatewayVal" Text="Gateway: 192.168.1.1"
-                                   FontFamily="Cascadia Code, Consolas" FontSize="11" Foreground="{StaticResource BrushTextSecondary}" TextTrimming="CharacterEllipsis"/>
-                    </Grid>
-                </Border>
-
-                <!-- CARD 2: PUBLIC IP & ISP IDENTITY -->
-                <Border Grid.Column="2" Style="{StaticResource StyleGlassCard}" Padding="16,13">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Path Data="{StaticResource IconGlobe}" Fill="{StaticResource BrushElectricCyan}" Width="13" Height="13" Stretch="Uniform" Margin="0,0,7,0"/>
-                            <TextBlock Text="PUBLIC EDGE / ISP" FontFamily="Segoe UI Variable Small" FontSize="11" FontWeight="Bold" Foreground="{StaticResource BrushTextMuted}"/>
-                        </StackPanel>
-                        <TextBlock Grid.Row="1" x:Name="HudPublicIpVal" Text="Resolving..."
-                                   FontFamily="Cascadia Code, Consolas" FontSize="17" FontWeight="Bold" Foreground="{StaticResource BrushTextPrimary}" Margin="0,6,0,2"/>
-                        <TextBlock Grid.Row="2" x:Name="HudIspVal" Text="Broadband Provider"
-                                   FontFamily="Segoe UI Variable Text" FontSize="11" Foreground="{StaticResource BrushTextSecondary}" TextTrimming="CharacterEllipsis"/>
-                    </Grid>
-                </Border>
-
-                <!-- CARD 3: MONITORED FLEET NODES -->
-                <Border Grid.Column="4" Style="{StaticResource StyleGlassCard}" Padding="16,13">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Path Data="{StaticResource IconDesktop}" Fill="{StaticResource BrushStatusEmerald}" Width="13" Height="13" Stretch="Uniform" Margin="0,0,7,0"/>
-                            <TextBlock Text="MONITORED FLEET" FontFamily="Segoe UI Variable Small" FontSize="11" FontWeight="Bold" Foreground="{StaticResource BrushTextMuted}"/>
-                        </StackPanel>
-                        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,4,0,2">
-                            <TextBlock x:Name="HudOnlineCountVal" Text="0" FontFamily="Cascadia Code, Consolas" FontSize="20" FontWeight="Bold" Foreground="{StaticResource BrushStatusEmerald}"/>
-                            <TextBlock Text=" online" FontFamily="Segoe UI Variable Text" FontSize="12.5" Foreground="{StaticResource BrushTextSecondary}" VerticalAlignment="Bottom" Margin="4,0,8,2"/>
-                            <TextBlock x:Name="HudTotalCountVal" Text="/ 0" FontFamily="Cascadia Code, Consolas" FontSize="15" Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Bottom" Margin="0,0,0,2"/>
-                        </StackPanel>
-                        <TextBlock Grid.Row="2" Text="Subnet isolation enforced"
-                                   FontFamily="Segoe UI Variable Text" FontSize="11" Foreground="{StaticResource BrushStatusEmerald}"/>
-                    </Grid>
-                </Border>
-
-                <!-- CARD 4: NETWORK HEALTH & LATENCY -->
-                <Border Grid.Column="6" Style="{StaticResource StyleGlassCard}" Padding="16,13">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Path Data="{StaticResource IconPulse}" Stroke="{StaticResource BrushElectricCyan}" StrokeThickness="1.8" Width="13" Height="13" Stretch="Uniform" Margin="0,0,7,0"/>
-                            <TextBlock Text="TELEMETRY HEALTH" FontFamily="Segoe UI Variable Small" FontSize="11" FontWeight="Bold" Foreground="{StaticResource BrushTextMuted}"/>
-                        </StackPanel>
-                        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,4,0,2">
-                            <TextBlock x:Name="HudLatencyVal" Text="12.0" FontFamily="Cascadia Code, Consolas" FontSize="20" FontWeight="Bold" Foreground="{StaticResource BrushElectricCyan}"/>
-                            <TextBlock Text=" ms avg" FontFamily="Segoe UI Variable Text" FontSize="12.5" Foreground="{StaticResource BrushTextSecondary}" VerticalAlignment="Bottom" Margin="4,0,0,2"/>
-                        </StackPanel>
-                        <TextBlock Grid.Row="2" x:Name="HudJitterVal" Text="Jitter: ±1.2ms • 0.0% loss"
-                                   FontFamily="Cascadia Code, Consolas" FontSize="11" Foreground="{StaticResource BrushTextMuted}"/>
-                    </Grid>
-                </Border>
-            </Grid>
-
-            <!-- ──────────────────────────────────────────
-                 LIVE SCANNER & ROTATING RADAR BANNER
-                 ────────────────────────────────────────── -->
-            <Border Grid.Row="1" Margin="0,0,0,16" Style="{StaticResource StyleGlassCard}" Padding="16,11" Background="#121622">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <!-- Radar Sweep Graphic -->
-                        <ColumnDefinition Width="Auto"/>
-                        <!-- Telemetry Status & Progress Bar -->
-                        <ColumnDefinition Width="*"/>
-                        <!-- Action Trigger Button -->
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-
-                    <!-- Animated Rotating Radar Sweep -->
-                    <Grid Grid.Column="0" Width="32" Height="32" Margin="0,0,14,0" VerticalAlignment="Center">
-                        <Ellipse Stroke="{StaticResource BrushBorderGlass}" StrokeThickness="1"/>
-                        <Ellipse Stroke="{StaticResource BrushBorderGlass}" StrokeThickness="1" Width="16" Height="16"/>
-                        <!-- Sweep Beam -->
-                        <Line X1="16" Y1="16" X2="16" Y2="2" Stroke="{StaticResource BrushElectricCyan}" StrokeThickness="1.8" RenderTransformOrigin="0.5,0.5">
-                            <Line.RenderTransform>
-                                <RotateTransform x:Name="RadarSweepTransform" Angle="0"/>
-                            </Line.RenderTransform>
-                            <Line.Triggers>
-                                <EventTrigger RoutedEvent="Loaded">
-                                    <BeginStoryboard>
-                                        <Storyboard RepeatBehavior="Forever">
-                                            <DoubleAnimation Storyboard.TargetName="RadarSweepTransform"
-                                                             Storyboard.TargetProperty="Angle"
-                                                             From="0" To="360" Duration="0:0:2.0"/>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </EventTrigger>
-                            </Line.Triggers>
-                        </Line>
-                    </Grid>
-
-                    <!-- Scan Description & Progress -->
-                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="DISCOVERY ENGINE:" FontFamily="Segoe UI Variable Display" FontWeight="Bold" FontSize="11.5" Foreground="{StaticResource BrushElectricCyan}" Margin="0,0,8,0"/>
-                            <TextBlock x:Name="ScanStatusMessage" Text="Active ARP sweep &amp; mDNS listener active on local subnet"
-                                       FontFamily="Cascadia Code, Consolas" FontSize="11.5" Foreground="{StaticResource BrushTextPrimary}"/>
-                        </StackPanel>
-                        <!-- Gradient Progress Bar -->
-                        <ProgressBar x:Name="ScanProgressBar" Margin="0,6,24,0" Height="3.5" Maximum="100" Value="0"
-                                     Foreground="{StaticResource BrushCyanGlow}" Background="#1A2030" BorderThickness="0"/>
+                <!-- Card 1: TOTAL DEVICES -->
+                <Border Grid.Column="0" Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="16">
+                    <StackPanel>
+                        <TextBlock Text="TOTAL DEVICES" FontSize="11" FontWeight="Bold" Foreground="#64748B"/>
+                        <TextBlock x:Name="TotalDevicesBlock" Text="0" FontSize="28" FontWeight="Bold" Foreground="White" Margin="0,4,0,0"/>
                     </StackPanel>
+                </Border>
 
-                    <!-- Primary Action Trigger -->
-                    <Button Grid.Column="2" x:Name="TopScanBtn" Style="{StaticResource ScanNetworkButtonStyle}" Click="TopScanBtn_Click">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Path Data="{StaticResource IconRefresh}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Width="12" Height="12" Stretch="Uniform" Margin="0,0,8,0" VerticalAlignment="Center" />
-                            <TextBlock x:Name="ScanBtnText" Text="Scan Fleet" FontWeight="SemiBold" FontSize="12" VerticalAlignment="Center" />
-                        </StackPanel>
-                    </Button>
-                </Grid>
-            </Border>
+                <!-- Card 2: ONLINE STATUS -->
+                <Border Grid.Column="2" Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="16">
+                    <StackPanel>
+                        <TextBlock Text="ONLINE STATUS" FontSize="11" FontWeight="Bold" Foreground="#64748B"/>
+                        <TextBlock x:Name="OnlineStatusBlock" Text="0 Active" FontSize="28" FontWeight="Bold" Foreground="#10B981" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
 
-            <!-- ──────────────────────────────────────────
-                 VIEWPORT (FLEET VIEW / OVERVIEW / DETAILS)
-                 ────────────────────────────────────────── -->
-            <Grid Grid.Row="2">
-                <!-- Fleet Device Card View (Default Primary View) -->
-                <views:DeviceListView x:Name="DeviceListControl" Visibility="Visible" />
+                <!-- Card 3: BLOCKED -->
+                <Border Grid.Column="4" Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="16">
+                    <StackPanel>
+                        <TextBlock Text="BLOCKED" FontSize="11" FontWeight="Bold" Foreground="#64748B"/>
+                        <TextBlock x:Name="BlockedStatusBlock" Text="0 Devices" FontSize="28" FontWeight="Bold" Foreground="#F43F5E" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
 
-                <!-- Detailed Audit Overview View -->
-                <views:OverviewView x:Name="OverviewControl" Visibility="Collapsed" />
-
-                <!-- Deep Inspection Detail View -->
-                <views:DeviceDetailView x:Name="DeviceDetailControl" Visibility="Collapsed" />
+                <!-- Card 4: SECURITY HEALTH -->
+                <Border Grid.Column="6" Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="16">
+                    <StackPanel>
+                        <TextBlock Text="SECURITY HEALTH" FontSize="11" FontWeight="Bold" Foreground="#64748B"/>
+                        <TextBlock x:Name="SecurityHealthBlock" Text="Optimal" FontSize="28" FontWeight="Bold" Foreground="#3B82F6" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
             </Grid>
+
+            <!-- ── Device Fleet List View ── -->
+            <Border Grid.Row="2" Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" ClipToBounds="True">
+                <ListView x:Name="DevicesListView" Background="Transparent" BorderThickness="0"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                          SelectionMode="Single">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                            <Setter Property="BorderBrush" Value="#1C2538"/>
+                            <Setter Property="Padding" Value="16,12"/>
+                            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListViewItem">
+                                        <Border x:Name="rowBorder" Background="{TemplateBinding Background}" 
+                                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                                Padding="{TemplateBinding Padding}">
+                                            <ContentPresenter/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="rowBorder" Property="Background" Value="#1D273B"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate DataType="{x:Type models:DeviceItem}">
+                            <Grid VerticalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <!-- Device Icon Badge -->
+                                    <ColumnDefinition Width="Auto"/>
+                                    <!-- Name & Network Identity -->
+                                    <ColumnDefinition Width="*"/>
+                                    <!-- Vendor Tag -->
+                                    <ColumnDefinition Width="Auto"/>
+                                    <!-- Status Badge -->
+                                    <ColumnDefinition Width="Auto"/>
+                                    <!-- Action Button -->
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Device Icon Badge -->
+                                <Border Grid.Column="0" Background="#121824" Width="42" Height="42" CornerRadius="10" Margin="0,0,20,0" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding IconGlyph}" FontFamily="Segoe MDL2 Assets" Foreground="#94A3B8" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+
+                                <!-- Name & Network Identity -->
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,20,0">
+                                    <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="SemiBold" Foreground="White" Margin="0,0,0,3"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding IpAddress}" FontSize="12" Foreground="#94A3B8" FontFamily="Consolas, Cascadia Code"/>
+                                        <TextBlock Text=" • " Foreground="#64748B"/>
+                                        <TextBlock Text="{Binding MacAddress}" FontSize="12" Foreground="#64748B" FontFamily="Consolas, Cascadia Code"/>
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <!-- Vendor Tag -->
+                                <Border Grid.Column="2" Background="#121824" BorderBrush="#232E45" BorderThickness="1" CornerRadius="6" Padding="10,4" Margin="0,0,20,0" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding Vendor}" FontSize="11" Foreground="#CBD5E1"/>
+                                </Border>
+
+                                <!-- Status Badge -->
+                                <Border Grid.Column="3" Background="{Binding StatusBackgroundBrush}" CornerRadius="12" Padding="12,4" Margin="0,0,20,0" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding StatusText}" FontSize="11" FontWeight="SemiBold" Foreground="{Binding StatusForegroundBrush}"/>
+                                </Border>
+
+                                <!-- Action Button -->
+                                <Button Grid.Column="4" Content="{Binding ActionButtonText}" 
+                                        Background="{Binding ActionBackgroundBrush}" 
+                                        Foreground="{Binding ActionForegroundBrush}"
+                                        Style="{StaticResource RowActionButtonStyle}"
+                                        Click="ActionButton_Click"
+                                        VerticalAlignment="Center"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Border>
         </Grid>
     </Grid>
 </Window>
