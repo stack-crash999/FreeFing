@@ -193,30 +193,74 @@
                         </StackPanel>
                     </Border>
 
-                    <!-- 5. About (from Python version) -->
+                    <!-- 5. Theme Appearance (Dark / Light Mode) -->
+                    <Border Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="20,18" Margin="0,0,0,20">
+                        <StackPanel>
+                            <TextBlock Text="APPLICATION THEME APPEARANCE" FontSize="11.5" FontWeight="Bold" Foreground="#64748B" Margin="0,0,0,14"/>
+
+                            <Grid>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="Display Mode" Foreground="White" FontSize="13" FontWeight="SemiBold"/>
+                                    <TextBlock Text="Select between Fing Obsidian Dark or High-Contrast Light theme" Foreground="#94A3B8" FontSize="11.5" Margin="0,2,0,0"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                    <Button x:Name="DarkThemeBtn" Content="🌙 Dark Mode" Click="DarkTheme_Click"
+                                            Style="{StaticResource TopNavButtonStyle}" Padding="12,6" Margin="0,0,8,0"/>
+                                    <Button x:Name="LightThemeBtn" Content="☀️ Light Mode" Click="LightTheme_Click"
+                                            Style="{StaticResource TopNavButtonStyle}" Padding="12,6"/>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- 6. Developer Identity: SynETXSoftware -->
                     <Border Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="20,18">
                         <StackPanel>
-                            <TextBlock Text="ABOUT NETSENTRY / FREEFING" FontSize="11.5" FontWeight="Bold" Foreground="#64748B" Margin="0,0,0,14"/>
+                            <TextBlock Text="DEVELOPER IDENTITY" FontSize="11.5" FontWeight="Bold" Foreground="#64748B" Margin="0,0,0,14"/>
+
+                            <Grid Margin="0,0,0,14">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- SynETXSoftware Logo Image & Vector -->
+                                <Border Grid.Column="0" Background="#121824" BorderBrush="#232E45" BorderThickness="1" Width="52" Height="52" CornerRadius="10" Margin="0,0,16,0" VerticalAlignment="Center">
+                                    <Image Source="pack://application:,,,/Assets/synetx_logo.jpg" Width="44" Height="44" Stretch="UniformToFill">
+                                        <Image.Clip>
+                                            <RectangleGeometry RadiusX="8" RadiusY="8" Rect="0,0,44,44"/>
+                                        </Image.Clip>
+                                    </Image>
+                                </Border>
+
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="SynETXSoftware" FontSize="16" FontWeight="Bold" Foreground="White"/>
+                                        <Border Background="#1A2563EB" BorderBrush="#2563EB" BorderThickness="1" CornerRadius="4" Padding="6,2" Margin="10,0,0,0">
+                                            <TextBlock Text="Developer" FontSize="10.5" FontWeight="Bold" Foreground="#38BDF8"/>
+                                        </Border>
+                                    </StackPanel>
+                                    <TextBlock Text="Engineered by SynETXSoftware • Network Security &amp; Systems Architecture" FontSize="11.5" Foreground="#94A3B8" Margin="0,3,0,0"/>
+                                </StackPanel>
+                            </Grid>
 
                             <Grid Margin="0,0,0,8">
-                                <TextBlock Text="Product Name" Foreground="#94A3B8" FontSize="12.5" VerticalAlignment="Center"/>
+                                <TextBlock Text="Product" Foreground="#94A3B8" FontSize="12.5" VerticalAlignment="Center"/>
                                 <TextBlock Text="FreeFing Desktop (NetSentry)" Foreground="White" FontWeight="Bold" FontSize="12.5" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                             </Grid>
                             <Grid Margin="0,0,0,8">
+                                <TextBlock Text="Author / Dev" Foreground="#94A3B8" FontSize="12.5" VerticalAlignment="Center"/>
+                                <TextBlock Text="SynETXSoftware" Foreground="#38BDF8" FontWeight="Bold" FontSize="12.5" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                            </Grid>
+                            <Grid Margin="0,0,0,8">
                                 <TextBlock Text="Version" Foreground="#94A3B8" FontSize="12.5" VerticalAlignment="Center"/>
-                                <TextBlock Text="v2.4.0 (Enterprise Build)" Foreground="#38BDF8" FontWeight="SemiBold" FontSize="12.5" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                                <TextBlock Text="v2.4.0 (Enterprise Build)" Foreground="White" FontWeight="SemiBold" FontSize="12.5" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                             </Grid>
-                            <Grid Margin="0,0,0,8">
-                                <TextBlock Text="Technology Stack" Foreground="#94A3B8" FontSize="12.5" VerticalAlignment="Center"/>
-                                <TextBlock Text="C# WPF .NET 10 (Win-x64 Standalone)" Foreground="White" FontSize="12" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-                            </Grid>
-                            <Grid Margin="0,0,0,8">
+                            <Grid>
                                 <TextBlock Text="Repository" Foreground="#94A3B8" FontSize="12.5" VerticalAlignment="Center"/>
-                                <TextBlock Text="stack-crash999/FreeFing" Foreground="#94A3B8" FontSize="12" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                                <TextBlock Text="stack-crash999/FreeFing" Foreground="#94A3B8" FontSize="12.5" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                             </Grid>
-
-                            <TextBlock Text="Inspired by Fing Network Scanner. Built for seamless local network monitoring, hardware identification, and ARP hardware isolation."
-                                       FontSize="11.5" Foreground="#64748B" TextWrapping="Wrap" Margin="0,8,0,0" LineHeight="16"/>
                         </StackPanel>
                     </Border>
                 </StackPanel>

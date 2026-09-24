@@ -99,5 +99,15 @@ namespace NetSentry.App.Views
                 MessageBoxButton.OK,
                 MessageBoxImage.Information);
         }
+
+        private void DarkTheme_Click(object sender, RoutedEventArgs e)
+        {
+            NetSentry.App.Services.ThemeManager.SetTheme(true);
+        }
+
+        private void LightTheme_Click(object sender, RoutedEventArgs e)
+        {
+            NetSentry.App.Services.ThemeManager.SetTheme(false);
+        }
     }
 }

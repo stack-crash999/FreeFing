@@ -42,8 +42,12 @@ namespace NetSentry.App
             WireOverviewEvents();
             WireDeviceListEvents();
             WireDeviceDetailEvents();
+            WireInsightsEvents();
             WireSecurityEvents();
             WireSetupEvents();
+
+            // Theme Manager Hook
+            ThemeManager.ThemeChanged += OnThemeChanged;
 
             // Python Bridge Events
             _bridge.DeviceFound += OnDeviceFound;
@@ -95,6 +99,12 @@ namespace NetSentry.App
             };
         }
 
+        private void WireInsightsEvents()
+        {
+            InsightsControl.NavigateToDevicesRequested += () => ShowTab("Devices");
+            InsightsControl.NavigateToSecurityRequested += () => ShowTab("Security");
+        }
+
         private void WireSecurityEvents()
         {
             SecurityControl.UnblockRequested += async (mac) => await UnblockDeviceAsync(mac);
@@ -121,6 +131,24 @@ namespace NetSentry.App
             };
         }
 
+        private void OnThemeChanged(bool isDark)
+        {
+            ThemeText.Text = isDark ? "Light Mode" : "Dark Mode";
+            try
+            {
+                ThemeIconPath.Data = isDark ? (Geometry)FindResource("IconSun") : (Geometry)FindResource("IconMoon");
+                ThemeIconPath.Fill = isDark 
+                    ? new SolidColorBrush(Color.FromRgb(0xF5, 0x9E, 0x0B)) 
+                    : new SolidColorBrush(Color.FromRgb(0x3B, 0x82, 0xF6));
+            }
+            catch { }
+        }
+
+        private void ThemeToggleBtn_Click(object sender, RoutedEventArgs e)
+        {
+            ThemeManager.ToggleTheme();
+        }
+
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
             try
@@ -144,6 +172,7 @@ namespace NetSentry.App
 
                 DeviceListControl.SetDevices(_devices);
                 SecurityControl.UpdateDevices(_devices);
+                InsightsControl.UpdateInsights(_devices);
                 UpdateSubviewsHud();
 
                 // Start live telemetry polling timer (every 6 seconds)
@@ -167,6 +196,7 @@ namespace NetSentry.App
             OverviewControl.Visibility = (activeView == OverviewControl) ? Visibility.Visible : Visibility.Collapsed;
             DeviceListControl.Visibility = (activeView == DeviceListControl) ? Visibility.Visible : Visibility.Collapsed;
             DeviceDetailControl.Visibility = (activeView == DeviceDetailControl) ? Visibility.Visible : Visibility.Collapsed;
+            InsightsControl.Visibility = (activeView == InsightsControl) ? Visibility.Visible : Visibility.Collapsed;
             SecurityControl.Visibility = (activeView == SecurityControl) ? Visibility.Visible : Visibility.Collapsed;
             SetupControl.Visibility = (activeView == SetupControl) ? Visibility.Visible : Visibility.Collapsed;
         }
@@ -189,6 +219,13 @@ namespace NetSentry.App
                     HighlightNav(NavDevicesBtn, TopTabDevices);
                     break;
 
+                case "Insights":
+                    InsightsControl.SetNetworkInfo(_currentSsid, _currentSubnet);
+                    InsightsControl.UpdateInsights(_devices);
+                    ShowView(InsightsControl);
+                    HighlightNav(NavInsightsBtn, TopTabInsights);
+                    break;
+
                 case "Security":
                     SecurityControl.UpdateDevices(_devices);
                     ShowView(SecurityControl);
@@ -205,7 +242,7 @@ namespace NetSentry.App
 
         private void ResetNavTabVisuals()
         {
-            Button[] railButtons = { NavOverviewBtn, NavDevicesBtn, NavSecurityBtn, NavSetupBtn };
+            Button[] railButtons = { NavOverviewBtn, NavDevicesBtn, NavInsightsBtn, NavSecurityBtn, NavSetupBtn };
             foreach (var b in railButtons)
             {
                 if (b != null)
@@ -215,7 +252,7 @@ namespace NetSentry.App
                 }
             }
 
-            Button[] topButtons = { TopTabOverview, TopTabDevices, TopTabSecurity, TopTabSetup };
+            Button[] topButtons = { TopTabOverview, TopTabDevices, TopTabInsights, TopTabSecurity, TopTabSetup };
             foreach (var b in topButtons)
             {
                 if (b != null)
@@ -243,6 +280,7 @@ namespace NetSentry.App
 
         private void NavOverview_Click(object sender, RoutedEventArgs e) => ShowTab("Overview");
         private void NavDevices_Click(object sender, RoutedEventArgs e) => ShowTab("Devices");
+        private void NavInsights_Click(object sender, RoutedEventArgs e) => ShowTab("Insights");
         private void NavSecurity_Click(object sender, RoutedEventArgs e) => ShowTab("Security");
         private void NavSetup_Click(object sender, RoutedEventArgs e) => ShowTab("Setup");
 
@@ -397,6 +435,7 @@ namespace NetSentry.App
             DeviceListControl.SetNetworkName(ssid);
             SecurityControl.SetGatewayInfo(gateway);
             SetupControl.SetNetworkSettings("Default Adapter", localIp, subnet, gateway);
+            InsightsControl.SetNetworkInfo(ssid, subnet);
 
             UpdateSubviewsHud();
         }
@@ -408,6 +447,7 @@ namespace NetSentry.App
 
             OverviewControl.SetDeviceCounts(online, blocked);
             SecurityControl.UpdateDevices(_devices);
+            InsightsControl.UpdateInsights(_devices);
         }
 
         private void OnDeviceFound(DeviceItem dev)
