@@ -19,6 +19,7 @@ namespace NetSentry.App.Views
 
         private readonly ObservableCollection<DeviceItem> _allDevices = new();
         private ICollectionView? _view;
+        private string _categoryFilter = "All";
 
         public DeviceListView()
         {
@@ -27,18 +28,14 @@ namespace NetSentry.App.Views
             _view.Filter = FilterDevice;
             DeviceListViewControl.ItemsSource = _view;
 
-            // Wire up event handlers after controls are guaranteed initialized
             if (SearchBox != null) SearchBox.TextChanged += SearchBox_TextChanged;
-            if (StatusFilterCombo != null) StatusFilterCombo.SelectionChanged += FilterCombo_SelectionChanged;
-            if (TypeFilterCombo != null) TypeFilterCombo.SelectionChanged += FilterCombo_SelectionChanged;
-            if (BrandFilterCombo != null) BrandFilterCombo.SelectionChanged += FilterCombo_SelectionChanged;
 
             UpdatePaginationText();
         }
 
         public void SetNetworkName(string name)
         {
-            if (TitleBlock != null) TitleBlock.Text = $"Devices of {name}";
+            if (TitleBlock != null) TitleBlock.Text = $"Devices on {name}";
         }
 
         public void SetLastUpdated(string timeStr)
@@ -49,34 +46,36 @@ namespace NetSentry.App.Views
         public void SetDevices(IEnumerable<DeviceItem> devices)
         {
             _allDevices.Clear();
-            var brands = new HashSet<string>();
+
+            int wsCount = 0, mobCount = 0, iotCount = 0, infraCount = 0;
 
             foreach (var d in devices)
             {
+                d.EnsureDefaultPortsAndLink();
                 _allDevices.Add(d);
-                if (!string.IsNullOrWhiteSpace(d.Vendor) && d.Vendor != "Unknown")
+
+                switch (d.Category)
                 {
-                    brands.Add(d.Vendor);
+                    case DeviceCategory.Workstation: wsCount++; break;
+                    case DeviceCategory.Mobile: mobCount++; break;
+                    case DeviceCategory.Infrastructure: infraCount++; break;
+                    default: iotCount++; break;
                 }
             }
 
-            // Update brand combo items
-            if (BrandFilterCombo != null)
-            {
-                BrandFilterCombo.Items.Clear();
-                BrandFilterCombo.Items.Add(new ComboBoxItem { Content = "All Brands" });
-                foreach (var b in brands.OrderBy(x => x))
-                {
-                    BrandFilterCombo.Items.Add(new ComboBoxItem { Content = b });
-                }
-                BrandFilterCombo.SelectedIndex = 0;
-            }
+            // Update category counts
+            if (PillCountAll != null) PillCountAll.Text = $"All ({_allDevices.Count})";
+            if (PillCountWorkstations != null) PillCountWorkstations.Text = $"Workstations ({wsCount})";
+            if (PillCountMobile != null) PillCountMobile.Text = $"Mobile ({mobCount})";
+            if (PillCountIot != null) PillCountIot.Text = $"IoT ({iotCount})";
+            if (PillCountInfra != null) PillCountInfra.Text = $"Infrastructure ({infraCount})";
 
             UpdatePaginationText();
         }
 
         public void AddOrUpdateDevice(DeviceItem device)
         {
+            device.EnsureDefaultPortsAndLink();
             var existing = _allDevices.FirstOrDefault(d => d.Mac.Equals(device.Mac, StringComparison.OrdinalIgnoreCase));
             if (existing != null)
             {
@@ -94,6 +93,13 @@ namespace NetSentry.App.Views
         {
             if (obj is not DeviceItem d) return false;
 
+            // Category filter
+            if (_categoryFilter != "All")
+            {
+                if (!string.Equals(d.Category.ToString(), _categoryFilter, StringComparison.OrdinalIgnoreCase))
+                    return false;
+            }
+
             // Search text
             string q = SearchBox != null ? SearchBox.Text.Trim().ToLowerInvariant() : "";
             if (!string.IsNullOrEmpty(q))
@@ -106,29 +112,6 @@ namespace NetSentry.App.Views
                 if (!matches) return false;
             }
 
-            // Status filter
-            string status = (StatusFilterCombo?.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "All Status";
-            if (status != "All Status")
-            {
-                if (status == "Online" && (!d.IsOnline || d.IsBlocked)) return false;
-                if (status == "Blocked" && !d.IsBlocked) return false;
-                if (status == "Offline" && (d.IsOnline || d.IsBlocked)) return false;
-            }
-
-            // Type filter
-            string type = (TypeFilterCombo?.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "All Types";
-            if (type != "All Types")
-            {
-                if (!string.Equals(d.TypeDisplay, type, StringComparison.OrdinalIgnoreCase)) return false;
-            }
-
-            // Brand filter
-            string brand = (BrandFilterCombo?.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "All Brands";
-            if (brand != "All Brands")
-            {
-                if (!string.Equals(d.Vendor, brand, StringComparison.OrdinalIgnoreCase)) return false;
-            }
-
             return true;
         }
 
@@ -137,37 +120,22 @@ namespace NetSentry.App.Views
             if (PaginationBlock == null) return;
             int total = _allDevices?.Count ?? 0;
             int count = _view?.Cast<object>().Count() ?? 0;
-            PaginationBlock.Text = count > 0 ? $"Showing 1-{count} of {total}" : $"Showing 0 of {total}";
+            PaginationBlock.Text = count > 0 ? $"Displaying {count} of {total} monitored hosts" : $"Displaying 0 of {total} hosts";
         }
 
         private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (_view == null) return;
-            _view.Refresh();
+            _view?.Refresh();
             UpdatePaginationText();
         }
 
-        private void FilterCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void CategoryPill_Click(object sender, RoutedEventArgs e)
         {
-            if (_view == null) return;
-            _view.Refresh();
-            UpdatePaginationText();
-        }
-
-        private void SortByStatus_Click(object sender, RoutedEventArgs e)
-        {
-            if (_view != null)
+            if (sender is RadioButton rb && rb.Tag != null)
             {
-                var sort = _view.SortDescriptions.FirstOrDefault(s => s.PropertyName == nameof(DeviceItem.IsBlocked));
-                _view.SortDescriptions.Clear();
-                if (sort.Direction == ListSortDirection.Ascending)
-                {
-                    _view.SortDescriptions.Add(new SortDescription(nameof(DeviceItem.IsBlocked), ListSortDirection.Descending));
-                }
-                else
-                {
-                    _view.SortDescriptions.Add(new SortDescription(nameof(DeviceItem.IsBlocked), ListSortDirection.Ascending));
-                }
+                _categoryFilter = rb.Tag.ToString() ?? "All";
+                _view?.Refresh();
+                UpdatePaginationText();
             }
         }
 
@@ -181,10 +149,7 @@ namespace NetSentry.App.Views
 
         private void DeviceListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (DeviceListViewControl.SelectedItem is DeviceItem selected)
-            {
-                DeviceSelected?.Invoke(selected);
-            }
+            // Do not force navigation on single click so expandable drawer can be used inline
         }
 
         private DeviceItem? GetContextDevice(object sender)
@@ -205,6 +170,30 @@ namespace NetSentry.App.Views
             }
         }
 
+        private void DeepAudit_Click(object sender, RoutedEventArgs e)
+        {
+            var device = GetContextDevice(sender);
+            if (device != null)
+            {
+                DeviceSelected?.Invoke(device);
+            }
+        }
+
+        private void ToggleBlock_Click(object sender, RoutedEventArgs e)
+        {
+            var device = GetContextDevice(sender);
+            if (device == null) return;
+
+            if (device.IsBlocked)
+            {
+                UnblockContext_Click(sender, e);
+            }
+            else
+            {
+                BlockContext_Click(sender, e);
+            }
+        }
+
         private void BlockContext_Click(object sender, RoutedEventArgs e)
         {
             var device = GetContextDevice(sender);
@@ -221,7 +210,7 @@ namespace NetSentry.App.Views
             }
 
             var result = MessageBox.Show(
-                $"Block internet access for:\n\n  {device.DisplayName}\n  IP: {device.Ip}\n  MAC: {device.MacUpper}\n\nThis device will lose internet connectivity.",
+                $"Block internet access for:\n\n  {device.DisplayName}\n  IP: {device.Ip}\n  MAC: {device.MacUpper}\n\nThis device will be isolated via ARP spoofing.",
                 "Block Network Access",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Warning);

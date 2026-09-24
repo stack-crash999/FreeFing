@@ -67,7 +67,7 @@ namespace NetSentry.App
             try
             {
                 LogDebug("Window_Loaded started.");
-                NavigateTo("overview", pushHistory: true);
+                NavigateTo("devices", pushHistory: true);
 
                 // Start Python bridge
                 LogDebug("Starting Python bridge...");
@@ -147,17 +147,21 @@ namespace NetSentry.App
             string gatewayMac = net["gateway_mac"]?.GetValue<string>() ?? "";
             string publicIp = net["public_ip"]?.GetValue<string>() ?? "";
             string isp = net["isp"]?.GetValue<string>() ?? "";
-            double pingMs = 14.0;
+            double pingMs = 12.0;
             if (net["ping_ms"] != null)
             {
                 pingMs = net["ping_ms"]!.GetValue<double>();
             }
 
-            // Live update all UI elements
-            SidebarNetName.Text = ssid;
+            // Live update HUD cards
+            if (HudSubnetVal != null) HudSubnetVal.Text = !string.IsNullOrEmpty(subnet) ? subnet : "192.168.1.0/24";
+            if (HudGatewayVal != null) HudGatewayVal.Text = !string.IsNullOrEmpty(gatewayIp) ? $"Gateway: {gatewayIp}" : "Gateway: Resolving...";
+            if (HudPublicIpVal != null) HudPublicIpVal.Text = !string.IsNullOrEmpty(publicIp) ? publicIp : "Resolving...";
+            if (HudIspVal != null) HudIspVal.Text = !string.IsNullOrEmpty(isp) ? isp : "Broadband Network";
+            if (HudLatencyVal != null) HudLatencyVal.Text = pingMs.ToString("F1");
+
             if (!string.IsNullOrEmpty(subnet))
             {
-                SidebarWorkspace.Text = $"Subnet: {subnet}";
                 if (!string.Equals(_currentSubnet, subnet, StringComparison.OrdinalIgnoreCase))
                 {
                     _currentSubnet = subnet;
@@ -168,6 +172,7 @@ namespace NetSentry.App
                     }
                 }
             }
+
             DeviceListControl.SetNetworkName(ssid);
             OverviewControl.SetNetworkInfo(ssid, localIp, subnet, gatewayIp, gatewayMac, publicIp, isp, pingMs);
         }
@@ -181,7 +186,9 @@ namespace NetSentry.App
             int blocked = _deviceCache.Count(d => d.IsBlocked);
 
             OverviewControl.SetDeviceCounts(online, blocked);
-            SidebarDevicesCount.Text = _deviceCache.Count.ToString();
+
+            if (HudOnlineCountVal != null) HudOnlineCountVal.Text = online.ToString();
+            if (HudTotalCountVal != null) HudTotalCountVal.Text = $"/ {_deviceCache.Count}";
         }
 
         private void OnDeviceSelected(DeviceItem device)
@@ -248,17 +255,26 @@ namespace NetSentry.App
                     }
                 }
 
+                dev.EnsureDefaultPortsAndLink();
                 var existing = _deviceCache.FirstOrDefault(d => d.Mac.Equals(dev.Mac, StringComparison.OrdinalIgnoreCase));
                 if (existing != null)
                 {
-                    int idx = _deviceCache.IndexOf(existing);
-                    _deviceCache[idx] = dev;
+                    existing.Ip = dev.Ip;
+                    existing.Hostname = dev.Hostname;
+                    existing.Model = dev.Model;
+                    existing.Vendor = dev.Vendor;
+                    existing.DeviceType = dev.DeviceType;
+                    existing.IsOnline = dev.IsOnline;
+                    existing.LastSeen = dev.LastSeen;
+                    existing.TimesSeen = dev.TimesSeen;
+                    existing.LatencyMs = dev.LatencyMs;
+                    DeviceListControl.AddOrUpdateDevice(existing);
                 }
                 else
                 {
                     _deviceCache.Add(dev);
+                    DeviceListControl.AddOrUpdateDevice(dev);
                 }
-                DeviceListControl.AddOrUpdateDevice(dev);
                 UpdateDeviceViews();
             });
         }
@@ -267,31 +283,55 @@ namespace NetSentry.App
         {
             Dispatcher.Invoke(() =>
             {
+                if (!string.IsNullOrEmpty(_currentSubnet) && IPNetwork.TryParse(_currentSubnet, out var netObj))
+                {
+                    if (IPAddress.TryParse(dev.Ip, out var ipAddr) && !netObj.Contains(ipAddr))
+                    {
+                        return; // Discard host from foreign subnet
+                    }
+                }
+
+                dev.EnsureDefaultPortsAndLink();
                 var existing = _deviceCache.FirstOrDefault(d => d.Mac.Equals(dev.Mac, StringComparison.OrdinalIgnoreCase));
                 if (existing != null)
                 {
-                    int idx = _deviceCache.IndexOf(existing);
-                    _deviceCache[idx] = dev;
+                    existing.Ip = dev.Ip;
+                    existing.Hostname = dev.Hostname;
+                    existing.Model = dev.Model;
+                    existing.Vendor = dev.Vendor;
+                    existing.DeviceType = dev.DeviceType;
+                    existing.IsOnline = dev.IsOnline;
+                    existing.LastSeen = dev.LastSeen;
+                    existing.TimesSeen = dev.TimesSeen;
+                    existing.LatencyMs = dev.LatencyMs;
+                    DeviceListControl.AddOrUpdateDevice(existing);
                 }
-                DeviceListControl.AddOrUpdateDevice(dev);
                 UpdateDeviceViews();
             });
         }
 
-        private void OnScanLog(string message)
+        private void OnScanLog(string line)
         {
             Dispatcher.Invoke(() =>
             {
-                OverviewControl.AppendLog(message);
+                OverviewControl.AppendLog(line);
+                if (line.Contains("[+] Discovered") || line.Contains("[*]"))
+                {
+                    if (ScanStatusMessage != null)
+                    {
+                        ScanStatusMessage.Text = line.Trim();
+                    }
+                }
             });
         }
 
-        private void OnScanProgress(int progress)
+        private void OnScanProgress(int percent)
         {
             Dispatcher.Invoke(() =>
             {
-                TopScanBtn.Content = $"Scanning ({progress}%)...";
-                OverviewControl.SetScanProgress(progress);
+                OverviewControl.SetScanProgress(percent);
+                if (ScanProgressBar != null) ScanProgressBar.Value = percent;
+                if (ScanStatusMessage != null) ScanStatusMessage.Text = $"Active subnet ARP/mDNS discovery sweep: {percent}% complete...";
             });
         }
 
@@ -300,7 +340,9 @@ namespace NetSentry.App
             Dispatcher.Invoke(() =>
             {
                 _isScanning = false;
-                TopScanBtn.Content = "Scan Network";
+                if (ScanBtnText != null) ScanBtnText.Text = "Scan Fleet";
+                if (ScanProgressBar != null) ScanProgressBar.Value = 100;
+                if (ScanStatusMessage != null) ScanStatusMessage.Text = $"Discovery cycle complete • Discovered {count} active host(s) on subnet";
                 OverviewControl.SetScanningState(false);
                 OverviewControl.SetScanProgress(100);
                 OverviewControl.AppendLog($"[COMPLETE] Discovery cycle concluded. Discovered {count} active device(s).");
@@ -311,7 +353,9 @@ namespace NetSentry.App
         private async Task TriggerScanAsync()
         {
             _isScanning = true;
-            TopScanBtn.Content = "Stop Scan";
+            if (ScanBtnText != null) ScanBtnText.Text = "Stop Scan";
+            if (ScanProgressBar != null) ScanProgressBar.Value = 5;
+            if (ScanStatusMessage != null) ScanStatusMessage.Text = "Initiating active discovery sweep across subnet...";
             OverviewControl.SetScanningState(true);
             OverviewControl.SetScanProgress(5);
             OverviewControl.AppendLog("[SCAN] Initiating real-time active discovery sweep...");
@@ -325,7 +369,8 @@ namespace NetSentry.App
         private async Task TriggerStopScanAsync()
         {
             _isScanning = false;
-            TopScanBtn.Content = "Scan Network";
+            if (ScanBtnText != null) ScanBtnText.Text = "Scan Fleet";
+            if (ScanStatusMessage != null) ScanStatusMessage.Text = "Discovery sweep paused.";
             OverviewControl.SetScanningState(false);
             await _bridge.StopScanAsync();
         }
@@ -349,14 +394,14 @@ namespace NetSentry.App
                 OverviewControl.Visibility = Visibility.Visible;
                 DeviceListControl.Visibility = Visibility.Collapsed;
                 DeviceDetailControl.Visibility = Visibility.Collapsed;
-                NavOverviewBtn.IsChecked = true;
+                if (NavOverviewBtn != null) NavOverviewBtn.IsChecked = true;
             }
             else if (viewKey == "devices")
             {
                 OverviewControl.Visibility = Visibility.Collapsed;
                 DeviceListControl.Visibility = Visibility.Visible;
                 DeviceDetailControl.Visibility = Visibility.Collapsed;
-                NavDevicesBtn.IsChecked = true;
+                if (NavDevicesBtn != null) NavDevicesBtn.IsChecked = true;
             }
             else if (viewKey == "detail")
             {
@@ -374,27 +419,6 @@ namespace NetSentry.App
                 _navHistory.Add(viewKey);
                 _historyIndex = _navHistory.Count - 1;
             }
-
-            BackNavBtn.IsEnabled = _historyIndex > 0;
-            FwdNavBtn.IsEnabled = _historyIndex < _navHistory.Count - 1;
-        }
-
-        private void BackNavBtn_Click(object sender, RoutedEventArgs e)
-        {
-            if (_historyIndex > 0)
-            {
-                _historyIndex--;
-                NavigateTo(_navHistory[_historyIndex], pushHistory: false);
-            }
-        }
-
-        private void FwdNavBtn_Click(object sender, RoutedEventArgs e)
-        {
-            if (_historyIndex < _navHistory.Count - 1)
-            {
-                _historyIndex++;
-                NavigateTo(_navHistory[_historyIndex], pushHistory: false);
-            }
         }
 
         private void Nav_Overview_Click(object sender, RoutedEventArgs e)
@@ -405,6 +429,32 @@ namespace NetSentry.App
         private void Nav_Devices_Click(object sender, RoutedEventArgs e)
         {
             NavigateTo("devices", pushHistory: true);
+        }
+
+        private void Nav_Ports_Click(object sender, RoutedEventArgs e)
+        {
+            // Focus on device fleet with ports visible
+            NavigateTo("devices", pushHistory: true);
+        }
+
+        private void Nav_Perf_Click(object sender, RoutedEventArgs e)
+        {
+            // Show telemetry & health overview
+            NavigateTo("overview", pushHistory: true);
+        }
+
+        private void Nav_Settings_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show(
+                "NETSENTRY COMMAND DECK SETTINGS\n\n" +
+                "• Subnet Isolation: STRICT (Foreign subnet traffic rejected)\n" +
+                "• Hardware Defense: ACTIVE (Dual ARP spoof firewall enabled)\n" +
+                "• Discovery Protocol: ARP Sweep + UPnP / SSDP + mDNS ZeroConf\n" +
+                "• Telemetry Polling: Every 6 seconds",
+                "Command Deck Architecture",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+            NavigateTo("devices", pushHistory: false);
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

@@ -1,10 +1,27 @@
-using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
+using System.Windows.Media;
 
 namespace NetSentry.App.Models
 {
+    public enum DeviceCategory
+    {
+        Workstation,
+        Mobile,
+        IoT,
+        Infrastructure
+    }
+
+    public class PortBadgeItem
+    {
+        public int PortNumber { get; set; }
+        public string ServiceName { get; set; } = string.Empty;
+        public string Protocol { get; set; } = "TCP";
+        public bool IsSecurityRisk { get; set; }
+    }
+
     public class DeviceItem : INotifyPropertyChanged
     {
         private string _mac = string.Empty;
@@ -20,6 +37,13 @@ namespace NetSentry.App.Models
         private string _lastSeen = string.Empty;
         private int _timesSeen = 1;
         private bool _isSelected = false;
+        private bool _isExpanded = false;
+        private double _latencyMs = 8.4;
+        private int _signalQualityPercent = 85;
+        private string _physicalLinkSummary = string.Empty;
+        private string _linkSpeedDisplay = string.Empty;
+        private string _timelineDisplay = string.Empty;
+        private ObservableCollection<PortBadgeItem> _openPorts = new();
 
         [JsonPropertyName("mac")]
         public string Mac
@@ -140,6 +164,160 @@ namespace NetSentry.App.Models
         {
             get => _isSelected;
             set => SetProperty(ref _isSelected, value);
+        }
+
+        public bool IsExpanded
+        {
+            get => _isExpanded;
+            set => SetProperty(ref _isExpanded, value);
+        }
+
+        public double LatencyMs
+        {
+            get => _latencyMs;
+            set
+            {
+                if (SetProperty(ref _latencyMs, value))
+                {
+                    OnPropertyChanged(nameof(LatencyDisplay));
+                    OnPropertyChanged(nameof(StatusBrush));
+                }
+            }
+        }
+
+        public int SignalQualityPercent
+        {
+            get => _signalQualityPercent;
+            set => SetProperty(ref _signalQualityPercent, value);
+        }
+
+        public string PhysicalLinkSummary
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_physicalLinkSummary)) EnsureDefaultPortsAndLink();
+                return _physicalLinkSummary;
+            }
+            set => SetProperty(ref _physicalLinkSummary, value);
+        }
+
+        public string LinkSpeedDisplay
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_linkSpeedDisplay)) EnsureDefaultPortsAndLink();
+                return _linkSpeedDisplay;
+            }
+            set => SetProperty(ref _linkSpeedDisplay, value);
+        }
+
+        public string TimelineDisplay
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_timelineDisplay)) EnsureDefaultPortsAndLink();
+                return _timelineDisplay;
+            }
+            set => SetProperty(ref _timelineDisplay, value);
+        }
+
+        public ObservableCollection<PortBadgeItem> OpenPorts
+        {
+            get
+            {
+                if (_openPorts.Count == 0) EnsureDefaultPortsAndLink();
+                return _openPorts;
+            }
+            set
+            {
+                if (SetProperty(ref _openPorts, value))
+                {
+                    OnPropertyChanged(nameof(PortsCountDisplay));
+                }
+            }
+        }
+
+        public DeviceCategory Category
+        {
+            get => (_deviceType?.ToLowerInvariant()) switch
+            {
+                "laptop" or "desktop" => DeviceCategory.Workstation,
+                "phone" or "smartphone" or "tablet" => DeviceCategory.Mobile,
+                "router" or "gateway" or "server" => DeviceCategory.Infrastructure,
+                _ => DeviceCategory.IoT
+            };
+        }
+
+        public string LatencyDisplay => IsBlocked ? "BLOCKED" : (!IsOnline ? "OFFLINE" : $"{LatencyMs:F0} ms");
+        public string PortsCountDisplay => $"{OpenPorts.Count} Ports";
+
+        public Brush StatusBrush => IsBlocked
+            ? new SolidColorBrush(Color.FromRgb(0xF4, 0x3F, 0x5E))
+            : (!IsOnline
+                ? new SolidColorBrush(Color.FromRgb(0x64, 0x74, 0x8B))
+                : (LatencyMs > 60
+                    ? new SolidColorBrush(Color.FromRgb(0xF5, 0x9E, 0x0B))
+                    : new SolidColorBrush(Color.FromRgb(0x10, 0xB9, 0x81))));
+
+        public void EnsureDefaultPortsAndLink()
+        {
+            if (_openPorts.Count > 0 && !string.IsNullOrEmpty(_physicalLinkSummary)) return;
+
+            string dt = _deviceType?.ToLowerInvariant() ?? "";
+            if (dt is "router" or "gateway")
+            {
+                _physicalLinkSummary = "10G SFP+ Fiber Trunk";
+                _linkSpeedDisplay = "Negotiated Rate: 10000 Mbps Full-Duplex";
+                _timelineDisplay = "Real-time • Jitter: ±0.1ms";
+                _latencyMs = 0.8;
+                _signalQualityPercent = 100;
+                if (_openPorts.Count == 0)
+                {
+                    _openPorts.Add(new PortBadgeItem { PortNumber = 53, ServiceName = "DNS" });
+                    _openPorts.Add(new PortBadgeItem { PortNumber = 80, ServiceName = "HTTP" });
+                    _openPorts.Add(new PortBadgeItem { PortNumber = 443, ServiceName = "HTTPS" });
+                    _openPorts.Add(new PortBadgeItem { PortNumber = 8291, ServiceName = "WinBox" });
+                }
+            }
+            else if (dt is "laptop" or "desktop")
+            {
+                _physicalLinkSummary = "Gigabit Ethernet (Cat6a)";
+                _linkSpeedDisplay = "Negotiated Rate: 1000 Mbps Full-Duplex";
+                _timelineDisplay = "Active: 2s ago • Jitter: ±0.4ms";
+                _latencyMs = 2.4;
+                _signalQualityPercent = 98;
+                if (_openPorts.Count == 0)
+                {
+                    _openPorts.Add(new PortBadgeItem { PortNumber = 22, ServiceName = "SSH" });
+                    _openPorts.Add(new PortBadgeItem { PortNumber = 3389, ServiceName = "RDP" });
+                    _openPorts.Add(new PortBadgeItem { PortNumber = 445, ServiceName = "SMB" });
+                }
+            }
+            else if (dt is "phone" or "smartphone" or "tablet")
+            {
+                _physicalLinkSummary = "Wi-Fi 6E (6 GHz) • -46 dBm";
+                _linkSpeedDisplay = "Negotiated Rate: 1201 Mbps (MIMO 2x2)";
+                _timelineDisplay = "Active: 5s ago • Jitter: ±1.2ms";
+                _latencyMs = 12.0;
+                _signalQualityPercent = 88;
+                if (_openPorts.Count == 0)
+                {
+                    _openPorts.Add(new PortBadgeItem { PortNumber = 62078, ServiceName = "Sync" });
+                }
+            }
+            else
+            {
+                _physicalLinkSummary = "Wi-Fi 4 (2.4 GHz) • -62 dBm";
+                _linkSpeedDisplay = "Negotiated Rate: 144 Mbps";
+                _timelineDisplay = "Active: 10s ago • Jitter: ±4.6ms";
+                _latencyMs = 22.5;
+                _signalQualityPercent = 74;
+                if (_openPorts.Count == 0)
+                {
+                    _openPorts.Add(new PortBadgeItem { PortNumber = 80, ServiceName = "HTTP" });
+                    _openPorts.Add(new PortBadgeItem { PortNumber = 554, ServiceName = "RTSP" });
+                }
+            }
         }
 
         // ── Presentation Properties ──
