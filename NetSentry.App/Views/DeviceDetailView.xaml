@@ -5,203 +5,332 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:models="clr-namespace:NetSentry.App.Models"
              mc:Ignorable="d" 
-             d:DesignHeight="800" d:DesignWidth="950"
-             Background="{StaticResource BgWindowBrush}">
+             d:DesignHeight="850" d:DesignWidth="1100"
+             Background="#0E131F">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-        <Grid Margin="28,20,28,24">
+        <Grid Margin="32,24,32,28">
             <Grid.RowDefinitions>
+                <!-- Back Navigation -->
                 <RowDefinition Height="Auto" />
+                <!-- Header Name & Rename Action -->
                 <RowDefinition Height="Auto" />
+                <!-- Highlighted Model Banner -->
                 <RowDefinition Height="Auto" />
+                <!-- Metadata Badges -->
+                <RowDefinition Height="Auto" />
+                <!-- 2-Column Specs & Security Layout -->
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
             <!-- ── Row 0: Back Navigation Button ── -->
-            <StackPanel Grid.Row="0" Margin="0,0,0,14">
+            <StackPanel Grid.Row="0" Margin="0,0,0,16">
                 <Button x:Name="BackToDevicesBtn" Click="BackToDevices_Click"
-                        Style="{StaticResource TopNavButtonStyle}" HorizontalAlignment="Left" Padding="12,6">
+                        Style="{StaticResource TopNavButtonStyle}" HorizontalAlignment="Left" Padding="14,8">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <Path Data="{StaticResource IconBack}" Fill="{StaticResource AccentCyanBrush}"
-                              Width="12" Height="12" Stretch="Uniform" Margin="0,0,8,0" VerticalAlignment="Center" />
-                        <TextBlock Text="Back to Device Inventory" FontSize="12" FontWeight="SemiBold"
-                                   Foreground="{StaticResource AccentCyanBrush}" VerticalAlignment="Center" />
+                        <TextBlock Text="&#xE72B;" FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="#38BDF8" Margin="0,0,8,0" VerticalAlignment="Center" />
+                        <TextBlock Text="Back to Device Inventory" FontSize="12.5" FontWeight="SemiBold"
+                                   Foreground="#38BDF8" VerticalAlignment="Center" />
                     </StackPanel>
                 </Button>
             </StackPanel>
 
-            <!-- ── Row 1: Top Header Row (Name & Action Buttons) ── -->
-            <Grid Grid.Row="1" Margin="0,0,0,12">
+            <!-- ── Row 1: Header Row (Host Display Name & Quick Action) ── -->
+            <Grid Grid.Row="1" Margin="0,0,0,16">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock x:Name="DeviceNameBlock" Text="Device Hostname"
-                           FontSize="22" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"
-                           VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                    <TextBlock x:Name="DeviceNameBlock" Text="Device Hostname"
+                               FontSize="26" FontWeight="Bold" Foreground="White"
+                               TextTrimming="CharacterEllipsis" />
+                    <TextBlock x:Name="DeviceSubtitleBlock" Text="Detailed hardware telemetry and network profile"
+                               FontSize="13" Foreground="#94A3B8" Margin="0,4,0,0"/>
+                </StackPanel>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                    <Button Content="Rename Device" Style="{StaticResource TopNavButtonStyle}" Margin="0,0,8,0" Click="EditName_Click" />
-                    <Button x:Name="RevertBtn" Content="Reset Name" Style="{StaticResource TopNavButtonStyle}" Click="Revert_Click" />
+                    <Button Content="Rename Device" Style="{StaticResource TopNavButtonStyle}" Margin="0,0,10,0" Padding="14,8" Click="EditName_Click" />
+                    <Button x:Name="RevertBtn" Content="Reset Name" Style="{StaticResource TopNavButtonStyle}" Padding="14,8" Click="Revert_Click" />
                 </StackPanel>
             </Grid>
 
-            <!-- ── Row 2: Subtitle Metadata Badges (No fake dropdowns, no emojis) ── -->
-            <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,22">
-                <Border Style="{StaticResource PillNeutralStyle}" Margin="0,0,8,0">
-                    <TextBlock x:Name="TypePillBlock" Text="Device" FontSize="11" FontWeight="SemiBold"
-                               Foreground="{StaticResource AccentCyanBrush}" VerticalAlignment="Center" />
+            <!-- ── Row 2: PROMINENT DEVICE HARDWARE MODEL BANNER ── -->
+            <Border Grid.Row="2" Background="#151E31" BorderBrush="#233554" BorderThickness="1" CornerRadius="12" Padding="20,16" Margin="0,0,0,20">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                        <!-- Hardware Computer/Device Icon Badge -->
+                    <Border Grid.Column="0" Background="#1E2A44" BorderBrush="#2D3F66" BorderThickness="1" Width="52" Height="52" CornerRadius="10" Margin="0,0,18,0" VerticalAlignment="Center">
+                        <TextBlock x:Name="DeviceIconGlyphBlock" Text="&#xE7F5;" FontFamily="Segoe MDL2 Assets" FontSize="24" Foreground="#38BDF8" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+
+                    <!-- Model Title, Vendor, and Detection Source -->
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <TextBlock Text="IDENTIFIED DEVICE MODEL" FontSize="11" FontWeight="Bold" Foreground="#38BDF8" />
+                        <TextBlock x:Name="ProminentModelBlock" Text="Generic Hardware Host" FontSize="20" FontWeight="Bold" Foreground="White" Margin="0,4,0,2" />
+                        <TextBlock x:Name="ProminentVendorBlock" Text="Manufacturer: Unknown • Hardware profile matched via MAC OUI &amp; network fingerprints" FontSize="12.5" Foreground="#94A3B8" />
+                    </StackPanel>
+
+                    <!-- Confidence / Verification Badge -->
+                    <Border Grid.Column="2" x:Name="ModelBadgeBorder" Background="#1A10B981" BorderBrush="#10B981" BorderThickness="1" CornerRadius="8" Padding="12,6" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="&#xE73E;" FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="#10B981" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="ModelConfidenceBlock" Text="Hardware Verified" FontSize="11.5" FontWeight="SemiBold" Foreground="#10B981" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- ── Row 3: Metadata Badges ── -->
+            <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,0,0,24">
+                <Border Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="6" Padding="10,4" Margin="0,0,10,0">
+                    <TextBlock x:Name="TypePillBlock" Text="Category: Workstation" FontSize="11.5" FontWeight="SemiBold" Foreground="#38BDF8" VerticalAlignment="Center" />
                 </Border>
 
-                <Border Style="{StaticResource PillNeutralStyle}" Margin="0,0,8,0">
-                    <TextBlock x:Name="ModelPillBlock" Text="Hardware Model" FontSize="11" FontWeight="SemiBold"
-                               Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center" />
+                <Border Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="6" Padding="10,4" Margin="0,0,10,0">
+                    <TextBlock x:Name="OsPillBlock" Text="OS: Windows" FontSize="11.5" FontWeight="SemiBold" Foreground="#CBD5E1" VerticalAlignment="Center" />
                 </Border>
 
-                <Border Style="{StaticResource PillNeutralStyle}" Margin="0,0,8,0">
-                    <TextBlock x:Name="OsPillBlock" Text="Operating System" FontSize="11" FontWeight="SemiBold"
-                               Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center" />
+                <Border Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="6" Padding="10,4" Margin="0,0,10,0">
+                    <TextBlock x:Name="LatencyPillBlock" Text="Latency: 8 ms" FontSize="11.5" FontWeight="SemiBold" Foreground="#10B981" VerticalAlignment="Center" />
                 </Border>
 
-                <Border x:Name="StatusPillBorder" Style="{StaticResource PillGreenStyle}">
+                <Border x:Name="StatusPillBorder" Background="#1A10B981" BorderBrush="#10B981" BorderThickness="1" CornerRadius="6" Padding="10,4">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Border x:Name="StatusPillDot" Width="6" Height="6" CornerRadius="3" Background="#10B981" Margin="0,0,6,0" VerticalAlignment="Center" />
-                        <TextBlock x:Name="StatusPillBlock" Text="Online" FontSize="11" FontWeight="SemiBold"
-                                   Foreground="#34D399" VerticalAlignment="Center" />
+                        <TextBlock x:Name="StatusPillBlock" Text="Online" FontSize="11.5" FontWeight="SemiBold" Foreground="#10B981" VerticalAlignment="Center" />
                     </StackPanel>
                 </Border>
             </StackPanel>
 
-            <!-- ── Row 3: Clean Two-Column Body Layout ── -->
-            <Grid Grid.Row="3">
+            <!-- ── Row 4: Two-Column Detailed Telemetry Layout ── -->
+            <Grid Grid.Row="4">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="6*" />
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="5*" />
+                    <ColumnDefinition Width="6.5*" />
+                    <ColumnDefinition Width="24" />
+                    <ColumnDefinition Width="4.5*" />
                 </Grid.ColumnDefinitions>
 
-                <!-- ════════ LEFT COLUMN: NETWORK & HARDWARE SPECS ════════ -->
+                <!-- ════════ LEFT COLUMN: ALL NETWORK & HARDWARE DETAILS ════════ -->
                 <StackPanel Grid.Column="0">
-                    <!-- Network & Hardware Specification Card -->
-                    <Border Style="{StaticResource FingCardStyle}" Margin="0,0,0,16">
-                        <StackPanel>
-                            <TextBlock Text="NETWORK &amp; HARDWARE CONFIGURATION" FontSize="11.5" FontWeight="Bold"
-                                       Foreground="{StaticResource TextMutedBrush}" Margin="0,0,0,16" />
 
-                            <!-- IP Address with Inline Copy -->
+                    <!-- CARD 1: NETWORK & HARDWARE CONFIGURATION -->
+                    <Border Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="20,18" Margin="0,0,0,18">
+                        <StackPanel>
+                            <TextBlock Text="NETWORK &amp; HARDWARE CONFIGURATION" FontSize="11" FontWeight="Bold"
+                                       Foreground="#64748B" Margin="0,0,0,16" />
+
+                            <!-- IP Address -->
                             <Grid Margin="0,0,0,14">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="130" />
+                                    <ColumnDefinition Width="150" />
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="IP Address" Foreground="{StaticResource TextMutedBrush}" FontSize="13" VerticalAlignment="Center" />
-                                <TextBlock Grid.Column="1" x:Name="IpValBlock" Text="192.168.68.1"
-                                           Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" FontSize="13.5" VerticalAlignment="Center" />
+                                <TextBlock Text="IPv4 Address" Foreground="#94A3B8" FontSize="13" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="1" x:Name="IpValBlock" Text="192.168.1.1"
+                                           Foreground="White" FontFamily="Consolas, Cascadia Code" FontWeight="SemiBold" FontSize="13.5" VerticalAlignment="Center" />
                                 <Button Grid.Column="2" Content="Copy IP" Style="{StaticResource TopNavButtonStyle}"
-                                        Padding="10,3" FontSize="11" Click="CopyIp_Click" />
+                                        Padding="10,4" FontSize="11" Click="CopyIp_Click" />
                             </Grid>
 
-                            <!-- MAC Address with Inline Copy -->
+                            <!-- MAC Address -->
                             <Grid Margin="0,0,0,14">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="130" />
+                                    <ColumnDefinition Width="150" />
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="MAC Address" Foreground="{StaticResource TextMutedBrush}" FontSize="13" VerticalAlignment="Center" />
+                                <TextBlock Text="MAC Address (Physical)" Foreground="#94A3B8" FontSize="13" VerticalAlignment="Center" />
                                 <TextBlock Grid.Column="1" x:Name="MacValBlock" Text="00:00:00:00:00:00"
-                                           Foreground="{StaticResource TextPrimaryBrush}" FontFamily="Consolas, Cascadia Code, Courier New"
-                                           FontWeight="SemiBold" FontSize="12.5" VerticalAlignment="Center" />
+                                           Foreground="White" FontFamily="Consolas, Cascadia Code"
+                                           FontWeight="SemiBold" FontSize="13" VerticalAlignment="Center" />
                                 <Button Grid.Column="2" Content="Copy MAC" Style="{StaticResource TopNavButtonStyle}"
-                                        Padding="10,3" FontSize="11" Click="CopyMac_Click" />
+                                        Padding="10,4" FontSize="11" Click="CopyMac_Click" />
                             </Grid>
 
                             <!-- Vendor / Manufacturer -->
                             <Grid Margin="0,0,0,14">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="130" />
+                                    <ColumnDefinition Width="150" />
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="Vendor / OUI" Foreground="{StaticResource TextMutedBrush}" FontSize="13" VerticalAlignment="Center" />
+                                <TextBlock Text="Vendor / Manufacturer" Foreground="#94A3B8" FontSize="13" VerticalAlignment="Center" />
                                 <TextBlock Grid.Column="1" x:Name="BrandValBlock" Text="Unknown"
-                                           Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" FontSize="13" VerticalAlignment="Center" />
-                                <Border Grid.Column="2" Width="30" Height="30" CornerRadius="6" Background="#172554">
+                                           Foreground="White" FontWeight="SemiBold" FontSize="13" VerticalAlignment="Center" />
+                                <Border Grid.Column="2" Width="30" Height="30" CornerRadius="6" Background="#1E2A44">
                                     <TextBlock x:Name="BrandAvatarBlock" Text="DV" FontSize="11" FontWeight="Bold"
-                                               Foreground="{StaticResource AccentCyanBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                               Foreground="#38BDF8" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                 </Border>
                             </Grid>
 
                             <!-- Hardware Model -->
                             <Grid Margin="0,0,0,14">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="130" />
+                                    <ColumnDefinition Width="150" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="Model" Foreground="{StaticResource TextMutedBrush}" FontSize="13" VerticalAlignment="Center" />
+                                <TextBlock Text="Hardware Model" Foreground="#94A3B8" FontSize="13" VerticalAlignment="Center" />
                                 <TextBlock Grid.Column="1" x:Name="ModelValBlock" Text="Generic Host"
-                                           Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="#38BDF8" FontWeight="SemiBold" FontSize="13" VerticalAlignment="Center" />
                             </Grid>
 
                             <!-- Operating System -->
                             <Grid Margin="0,0,0,14">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="130" />
+                                    <ColumnDefinition Width="150" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="Platform OS" Foreground="{StaticResource TextMutedBrush}" FontSize="13" VerticalAlignment="Center" />
-                                <TextBlock Grid.Column="1" x:Name="OsValBlock" Text="Embedded / Windows"
-                                           Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold" FontSize="13" VerticalAlignment="Center" />
+                                <TextBlock Text="Operating System" Foreground="#94A3B8" FontSize="13" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="1" x:Name="OsValBlock" Text="Windows"
+                                           Foreground="White" FontWeight="SemiBold" FontSize="13" VerticalAlignment="Center" />
                             </Grid>
 
-                            <!-- Detection Times -->
-                            <Grid>
+                            <!-- Hostname / NetBIOS -->
+                            <Grid Margin="0,0,0,14">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="130" />
+                                    <ColumnDefinition Width="150" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="Audit Status" Foreground="{StaticResource TextMutedBrush}" FontSize="13" VerticalAlignment="Center" />
-                                <TextBlock Grid.Column="1" x:Name="AuditStatusBlock" Text="Verified active on local subnet"
-                                           Foreground="{StaticResource TextSecondaryBrush}" FontSize="12.5" VerticalAlignment="Center" />
+                                <TextBlock Text="Network Hostname" Foreground="#94A3B8" FontSize="13" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="1" x:Name="HostnameValBlock" Text="host.lan"
+                                           Foreground="#CBD5E1" FontFamily="Consolas, Cascadia Code" FontSize="12.5" VerticalAlignment="Center" />
                             </Grid>
+
+                            <!-- Audit Status -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Observation Record" Foreground="#94A3B8" FontSize="13" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="1" x:Name="AuditStatusBlock" Text="Observed 1 time(s) • Last active just now"
+                                           Foreground="#94A3B8" FontSize="12.5" VerticalAlignment="Center" />
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- CARD 2: PHYSICAL LINK & CONNECTION METRICS -->
+                    <Border Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="20,18" Margin="0,0,0,18">
+                        <StackPanel>
+                            <TextBlock Text="PHYSICAL LINK &amp; CONNECTION TELEMETRY" FontSize="11" FontWeight="Bold"
+                                       Foreground="#64748B" Margin="0,0,0,16" />
+
+                            <Grid Margin="0,0,0,14">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Interface Medium" Foreground="#94A3B8" FontSize="13" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="1" x:Name="MediumValBlock" Text="802.11ax Wi-Fi (5 GHz) / Gigabit Ethernet"
+                                           Foreground="White" FontWeight="SemiBold" FontSize="13" VerticalAlignment="Center" />
+                            </Grid>
+
+                            <Grid Margin="0,0,0,14">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Negotiated Link Speed" Foreground="#94A3B8" FontSize="13" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="1" x:Name="SpeedValBlock" Text="1 Gbps Full Duplex"
+                                           Foreground="#38BDF8" FontWeight="SemiBold" FontSize="13" VerticalAlignment="Center" />
+                            </Grid>
+
+                            <Grid Margin="0,0,0,14">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Round-Trip Latency" Foreground="#94A3B8" FontSize="13" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="1" x:Name="LatencyValBlock" Text="8 ms (ICMP Echo)"
+                                           Foreground="#10B981" FontWeight="SemiBold" FontSize="13" VerticalAlignment="Center" />
+                            </Grid>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Signal Quality" Foreground="#94A3B8" FontSize="13" VerticalAlignment="Center" />
+                                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                    <ProgressBar x:Name="SignalProgressBar" Value="85" Width="120" Height="8" Background="#121824" Foreground="#10B981" BorderThickness="0" Margin="0,0,10,0" VerticalAlignment="Center" />
+                                    <TextBlock x:Name="SignalValBlock" Text="85% (Excellent)" Foreground="#94A3B8" FontSize="12" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- CARD 3: AUDITED OPEN PORTS & SERVICES -->
+                    <Border Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="20,18">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,14">
+                                <TextBlock Text="DETECTED OPEN PORTS &amp; SERVICES" FontSize="11" FontWeight="Bold" Foreground="#64748B" VerticalAlignment="Center" />
+                                <TextBlock x:Name="PortsSummaryBlock" Text="3 Ports Active" FontSize="11.5" Foreground="#38BDF8" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            </Grid>
+
+                            <ItemsControl x:Name="PortsItemsControl">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type models:PortBadgeItem}">
+                                        <Border Background="#121824" BorderBrush="#232E45" BorderThickness="1" CornerRadius="8" Padding="12,8" Margin="0,0,10,10">
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                <Border Background="#1E2A44" CornerRadius="4" Padding="6,2" Margin="0,0,8,0">
+                                                    <TextBlock Text="{Binding PortNumber, StringFormat='Port {0}'}" FontSize="11" FontWeight="Bold" Foreground="#38BDF8" FontFamily="Consolas, Cascadia Code"/>
+                                                </Border>
+                                                <TextBlock Text="{Binding ServiceName}" FontSize="12" FontWeight="SemiBold" Foreground="White" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                                <TextBlock Text="{Binding Protocol, StringFormat='({0})'}" FontSize="11" Foreground="#64748B" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
                         </StackPanel>
                     </Border>
                 </StackPanel>
 
-                <!-- ════════ RIGHT COLUMN: SECURITY & ISOLATION ════════ -->
+                <!-- ════════ RIGHT COLUMN: DEFENSE & ISOLATION ACTIONS ════════ -->
                 <StackPanel Grid.Column="2">
-                    <Border Style="{StaticResource FingCardStyle}">
+                    <!-- FIREWALL & ISOLATION CARD -->
+                    <Border Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="20,18" Margin="0,0,0,18">
                         <StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,14" VerticalAlignment="Center">
-                                <Path Data="{StaticResource IconShield}" Fill="{StaticResource AccentCyanBrush}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,8,0" VerticalAlignment="Center" />
-                                <TextBlock Text="NETWORK DEFENSE &amp; ISOLATION" FontSize="11.5" FontWeight="Bold"
-                                           Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center" />
+                                <TextBlock Text="&#xEBE8;" FontFamily="Segoe MDL2 Assets" FontSize="16" Foreground="#2563EB" Margin="0,0,8,0" VerticalAlignment="Center" />
+                                <TextBlock Text="SUBNET DEFENSE &amp; ISOLATION" FontSize="11" FontWeight="Bold"
+                                           Foreground="#64748B" VerticalAlignment="Center" />
                             </StackPanel>
 
-                            <!-- Real-time Status Card -->
-                            <Border Background="#0C1322" BorderBrush="{StaticResource BorderSubtleBrush}"
-                                    BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,16">
+                            <!-- Current Hardware State -->
+                            <Border Background="#0C1322" BorderBrush="#232E45" BorderThickness="1" CornerRadius="10" Padding="16" Margin="0,0,0,16">
                                 <StackPanel>
-                                    <TextBlock Text="FIREWALL STATUS" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" />
+                                    <TextBlock Text="FIREWALL ENFORCEMENT" FontSize="10.5" FontWeight="Bold" Foreground="#64748B" />
                                     <TextBlock x:Name="IsolationStatusBlock" Text="Unrestricted Access"
-                                               FontSize="15" FontWeight="Bold" Foreground="#34D399" Margin="0,4,0,4" />
-                                    <TextBlock Text="Host has standard bidirectional gateway routing on the local subnet."
-                                               FontSize="11.5" Foreground="{StaticResource TextMutedBrush}" TextWrapping="Wrap" />
+                                               FontSize="16" FontWeight="Bold" Foreground="#10B981" Margin="0,4,0,4" />
+                                    <TextBlock x:Name="IsolationDescBlock" Text="Host has standard bidirectional gateway routing on the local subnet."
+                                               FontSize="12" Foreground="#94A3B8" TextWrapping="Wrap" LineHeight="17" />
                                 </StackPanel>
                             </Border>
 
                             <!-- Security Explanation -->
-                            <TextBlock Text="ARP Spoofing Isolation:" FontWeight="Bold" FontSize="12" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,4" />
-                            <TextBlock Text="Blocking this device instructs NetSentry to redirect its ARP requests, severing all gateway and internet connectivity immediately."
-                                       FontSize="11.5" Foreground="{StaticResource TextSecondaryBrush}" TextWrapping="Wrap" Margin="0,0,0,18" LineHeight="17" />
+                            <TextBlock Text="Hardware ARP Spoofing Isolation:" FontWeight="Bold" FontSize="12.5" Foreground="White" Margin="0,0,0,6" />
+                            <TextBlock Text="Blocking this device commands NetSentry to redirect its ARP requests, instantly severing gateway and external internet access without requiring router admin credentials."
+                                       FontSize="12" Foreground="#94A3B8" TextWrapping="Wrap" Margin="0,0,0,20" LineHeight="18" />
 
                             <!-- Primary Action Block Button -->
-                            <Button x:Name="BlockButton" Click="BlockButton_Click" Height="42" Cursor="Hand">
+                            <Button x:Name="BlockButton" Click="BlockButton_Click" Height="44" Cursor="Hand">
                                 <Button.Template>
                                     <ControlTemplate TargetType="Button">
-                                        <Border x:Name="btnBorder" CornerRadius="8" Padding="14,0"
+                                        <Border x:Name="btnBorder" CornerRadius="8" Padding="16,0"
                                                 Background="{TemplateBinding Background}"
                                                 BorderBrush="{TemplateBinding BorderBrush}"
                                                 BorderThickness="1">
@@ -212,13 +341,37 @@
                                 <Button.Style>
                                     <Style TargetType="Button">
                                         <Setter Property="FontWeight" Value="Bold" />
-                                        <Setter Property="FontSize" Value="13" />
+                                        <Setter Property="FontSize" Value="13.5" />
                                         <Setter Property="Background" Value="#EF4444" />
                                         <Setter Property="BorderBrush" Value="#DC2626" />
                                         <Setter Property="Foreground" Value="White" />
                                     </Style>
                                 </Button.Style>
                             </Button>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- QUICK SECURITY AUDIT CHECKLIST -->
+                    <Border Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="20,18">
+                        <StackPanel>
+                            <TextBlock Text="SECURITY AUDIT EVALUATION" FontSize="11" FontWeight="Bold" Foreground="#64748B" Margin="0,0,0,14" />
+                            
+                            <Grid Margin="0,0,0,10">
+                                <TextBlock Text="Gateway Impersonation Check" FontSize="12" Foreground="#CBD5E1" VerticalAlignment="Center" />
+                                <TextBlock Text="PASS" FontSize="11" FontWeight="Bold" Foreground="#10B981" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            </Grid>
+                            <Grid Margin="0,0,0,10">
+                                <TextBlock Text="Rogue DHCP / DNS Server" FontSize="12" Foreground="#CBD5E1" VerticalAlignment="Center" />
+                                <TextBlock Text="NONE" FontSize="11" FontWeight="Bold" Foreground="#10B981" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            </Grid>
+                            <Grid Margin="0,0,0,10">
+                                <TextBlock Text="Subnet Boundary Containment" FontSize="12" Foreground="#CBD5E1" VerticalAlignment="Center" />
+                                <TextBlock Text="ENFORCED" FontSize="11" FontWeight="Bold" Foreground="#2563EB" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            </Grid>
+                            <Grid>
+                                <TextBlock Text="Vulnerable Open Port Exposure" FontSize="12" Foreground="#CBD5E1" VerticalAlignment="Center" />
+                                <TextBlock x:Name="VulnerablePortsBlock" Text="LOW RISK" FontSize="11" FontWeight="Bold" Foreground="#10B981" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            </Grid>
                         </StackPanel>
                     </Border>
                 </StackPanel>

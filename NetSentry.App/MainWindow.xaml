@@ -3,11 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:models="clr-namespace:NetSentry.App.Models"
+        xmlns:views="clr-namespace:NetSentry.App.Views"
         mc:Ignorable="d"
-        Title="NetGuardian Desktop"
-        Width="1280" Height="820"
-        MinHeight="680" MinWidth="1024"
+        Title="FreeFing - Advanced Network Monitor &amp; Guard"
+        Width="1320" Height="860"
+        MinHeight="700" MinWidth="1050"
         WindowStartupLocation="CenterScreen"
         Background="#0E131F"
         Loaded="Window_Loaded" Closing="Window_Closing">
@@ -25,175 +25,101 @@
             <DockPanel LastChildFill="False">
                 <!-- Top Primary Brand Glyph -->
                 <TextBlock DockPanel.Dock="Top" Text="&#xE774;" FontFamily="Segoe MDL2 Assets" 
-                           Foreground="#2563EB" FontSize="20" HorizontalAlignment="Center" Margin="0,18,0,24"/>
+                           Foreground="#2563EB" FontSize="22" HorizontalAlignment="Center" Margin="0,18,0,24"/>
 
-                <!-- Nav Buttons (Dashboard, Devices, Security) -->
+                <!-- Navigation Tabs: Overview, Devices (Computer Icon), Security -->
                 <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Center">
-                    <Button Style="{StaticResource NavIconButtonStyle}" Content="&#xE80F;" ToolTip="Dashboard" Click="NavDashboard_Click" Margin="0,0,0,12"/>
-                    <Button Style="{StaticResource NavIconButtonStyle}" Content="&#xECC9;" ToolTip="Device Map" Click="NavDeviceMap_Click" Margin="0,0,0,12"/>
-                    <Button Style="{StaticResource NavIconButtonStyle}" Content="&#xEBE8;" ToolTip="Security" Click="NavSecurity_Click" Margin="0,0,0,12"/>
+                    <!-- Tab 1: Overview -->
+                    <Button x:Name="NavOverviewBtn" Style="{StaticResource NavIconButtonStyle}" 
+                            Content="&#xE80F;" ToolTip="Overview" Click="NavOverview_Click" Margin="0,0,0,12"/>
+
+                    <!-- Tab 2: Devices (Computer Icon &#xE7F5;) -->
+                    <Button x:Name="NavDevicesBtn" Style="{StaticResource NavIconButtonStyle}" 
+                            Content="&#xE7F5;" ToolTip="Device Inventory" Click="NavDevices_Click" Margin="0,0,0,12"/>
+
+                    <!-- Tab 3: Security -->
+                    <Button x:Name="NavSecurityBtn" Style="{StaticResource NavIconButtonStyle}" 
+                            Content="&#xEBE8;" ToolTip="Security &amp; Defense" Click="NavSecurity_Click" Margin="0,0,0,12"/>
                 </StackPanel>
 
-                <!-- Settings Button -->
-                <Button DockPanel.Dock="Bottom" Style="{StaticResource NavIconButtonStyle}" Content="&#xE713;" ToolTip="Settings" Click="NavSettings_Click" Margin="0,0,0,18"/>
+                <!-- Settings Tab -->
+                <Button x:Name="NavSettingsBtn" DockPanel.Dock="Bottom" Style="{StaticResource NavIconButtonStyle}" 
+                        Content="&#xE713;" ToolTip="System Settings" Click="NavSettings_Click" Margin="0,0,0,18"/>
             </DockPanel>
         </Border>
 
         <!-- ══════════════════════════════════════════════
-             MAIN CONTENT CANVAS
+             MAIN VIEWPORT CANVAS
              ══════════════════════════════════════════════ -->
-        <Grid Grid.Column="1" Margin="32">
+        <Grid Grid.Column="1">
             <Grid.RowDefinitions>
+                <!-- Global Top Application Bar -->
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <!-- Page Content Viewport -->
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- ── Top Header & Actions ── -->
-            <Grid Grid.Row="0" Margin="0,0,0,24">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <StackPanel>
-                    <TextBlock Text="Network Overview" FontSize="24" FontWeight="SemiBold" Foreground="White"/>
-                    <TextBlock x:Name="SubnetSubtitleBlock" Text="Connected to Home Subnet • 192.168.1.0/24" FontSize="13" Foreground="#94A3B8" Margin="0,4,0,0"/>
-                </StackPanel>
-                <Button Grid.Column="1" x:Name="ScanBtn" Content="Scan Network" 
-                        Style="{StaticResource ScanButtonStyle}"
-                        Click="ScanBtn_Click"/>
-            </Grid>
+            <!-- ── Global Top Application Bar ── -->
+            <Border Grid.Row="0" Background="#121824" BorderBrush="#1C2436" BorderThickness="0,0,0,1" Padding="28,14,28,14">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <!-- Breadcrumb & Network Status -->
+                        <ColumnDefinition Width="*" />
+                        <!-- Top Nav Tab Switcher -->
+                        <ColumnDefinition Width="Auto" />
+                        <!-- Quick Scan Action -->
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
-            <!-- ── Summary HUD Glass Cards ── -->
-            <Grid Grid.Row="1" Margin="0,0,0,24">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="16"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="16"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="16"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-
-                <!-- Card 1: TOTAL DEVICES -->
-                <Border Grid.Column="0" Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="16">
-                    <StackPanel>
-                        <TextBlock Text="TOTAL DEVICES" FontSize="11" FontWeight="Bold" Foreground="#64748B"/>
-                        <TextBlock x:Name="TotalDevicesBlock" Text="0" FontSize="28" FontWeight="Bold" Foreground="White" Margin="0,4,0,0"/>
+                    <!-- Network Title & Connection Subtitle -->
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="FreeFing Desktop" FontSize="16" FontWeight="Bold" Foreground="White" />
+                            <Border Background="#1A2563EB" BorderBrush="#2563EB" BorderThickness="1" CornerRadius="4" Padding="6,2" Margin="10,0,0,0">
+                                <TextBlock Text="v2.4 Enterprise" FontSize="10.5" FontWeight="SemiBold" Foreground="#38BDF8" />
+                            </Border>
+                        </StackPanel>
+                        <TextBlock x:Name="TopSubnetBlock" Text="Connected to Home Subnet • 192.168.1.0/24" FontSize="12" Foreground="#94A3B8" Margin="0,3,0,0" />
                     </StackPanel>
-                </Border>
 
-                <!-- Card 2: ONLINE STATUS -->
-                <Border Grid.Column="2" Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="16">
-                    <StackPanel>
-                        <TextBlock Text="ONLINE STATUS" FontSize="11" FontWeight="Bold" Foreground="#64748B"/>
-                        <TextBlock x:Name="OnlineStatusBlock" Text="0 Active" FontSize="28" FontWeight="Bold" Foreground="#10B981" Margin="0,4,0,0"/>
+                    <!-- Top Navigation Tabs (Overview, Devices, Security, Settings) -->
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,20,0">
+                        <Button x:Name="TopTabOverview" Content="Overview" Click="NavOverview_Click"
+                                Style="{StaticResource TopNavButtonStyle}" Margin="0,0,6,0" Padding="14,6" />
+                        <Button x:Name="TopTabDevices" Content="Devices" Click="NavDevices_Click"
+                                Style="{StaticResource TopNavButtonStyle}" Margin="0,0,6,0" Padding="14,6" />
+                        <Button x:Name="TopTabSecurity" Content="Security" Click="NavSecurity_Click"
+                                Style="{StaticResource TopNavButtonStyle}" Margin="0,0,6,0" Padding="14,6" />
+                        <Button x:Name="TopTabSettings" Content="Settings" Click="NavSettings_Click"
+                                Style="{StaticResource TopNavButtonStyle}" Padding="14,6" />
                     </StackPanel>
-                </Border>
 
-                <!-- Card 3: BLOCKED -->
-                <Border Grid.Column="4" Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="16">
-                    <StackPanel>
-                        <TextBlock Text="BLOCKED" FontSize="11" FontWeight="Bold" Foreground="#64748B"/>
-                        <TextBlock x:Name="BlockedStatusBlock" Text="0 Devices" FontSize="28" FontWeight="Bold" Foreground="#F43F5E" Margin="0,4,0,0"/>
-                    </StackPanel>
-                </Border>
-
-                <!-- Card 4: SECURITY HEALTH -->
-                <Border Grid.Column="6" Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="16">
-                    <StackPanel>
-                        <TextBlock Text="SECURITY HEALTH" FontSize="11" FontWeight="Bold" Foreground="#64748B"/>
-                        <TextBlock x:Name="SecurityHealthBlock" Text="Optimal" FontSize="28" FontWeight="Bold" Foreground="#3B82F6" Margin="0,4,0,0"/>
-                    </StackPanel>
-                </Border>
-            </Grid>
-
-            <!-- ── Device Fleet List View ── -->
-            <Border Grid.Row="2" Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" ClipToBounds="True">
-                <ListView x:Name="DevicesListView" Background="Transparent" BorderThickness="0"
-                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                          ScrollViewer.VerticalScrollBarVisibility="Auto"
-                          SelectionMode="Single">
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="Background" Value="Transparent"/>
-                            <Setter Property="BorderThickness" Value="0,0,0,1"/>
-                            <Setter Property="BorderBrush" Value="#1C2538"/>
-                            <Setter Property="Padding" Value="16,12"/>
-                            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="ListViewItem">
-                                        <Border x:Name="rowBorder" Background="{TemplateBinding Background}" 
-                                                BorderBrush="{TemplateBinding BorderBrush}" 
-                                                BorderThickness="{TemplateBinding BorderThickness}" 
-                                                Padding="{TemplateBinding Padding}">
-                                            <ContentPresenter/>
-                                        </Border>
-                                        <ControlTemplate.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter TargetName="rowBorder" Property="Background" Value="#1D273B"/>
-                                            </Trigger>
-                                        </ControlTemplate.Triggers>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                    <ListView.ItemTemplate>
-                        <DataTemplate DataType="{x:Type models:DeviceItem}">
-                            <Grid VerticalAlignment="Center">
-                                <Grid.ColumnDefinitions>
-                                    <!-- Device Icon Badge -->
-                                    <ColumnDefinition Width="Auto"/>
-                                    <!-- Name & Network Identity -->
-                                    <ColumnDefinition Width="*"/>
-                                    <!-- Vendor Tag -->
-                                    <ColumnDefinition Width="Auto"/>
-                                    <!-- Status Badge -->
-                                    <ColumnDefinition Width="Auto"/>
-                                    <!-- Action Button -->
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-
-                                <!-- Device Icon Badge -->
-                                <Border Grid.Column="0" Background="#121824" Width="42" Height="42" CornerRadius="10" Margin="0,0,20,0" VerticalAlignment="Center">
-                                    <TextBlock Text="{Binding IconGlyph}" FontFamily="Segoe MDL2 Assets" Foreground="#94A3B8" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                </Border>
-
-                                <!-- Name & Network Identity -->
-                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,20,0">
-                                    <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="SemiBold" Foreground="White" Margin="0,0,0,3"/>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding IpAddress}" FontSize="12" Foreground="#94A3B8" FontFamily="Consolas, Cascadia Code"/>
-                                        <TextBlock Text=" • " Foreground="#64748B"/>
-                                        <TextBlock Text="{Binding MacAddress}" FontSize="12" Foreground="#64748B" FontFamily="Consolas, Cascadia Code"/>
-                                    </StackPanel>
-                                </StackPanel>
-
-                                <!-- Vendor Tag -->
-                                <Border Grid.Column="2" Background="#121824" BorderBrush="#232E45" BorderThickness="1" CornerRadius="6" Padding="10,4" Margin="0,0,20,0" VerticalAlignment="Center">
-                                    <TextBlock Text="{Binding Vendor}" FontSize="11" Foreground="#CBD5E1"/>
-                                </Border>
-
-                                <!-- Status Badge -->
-                                <Border Grid.Column="3" Background="{Binding StatusBackgroundBrush}" CornerRadius="12" Padding="12,4" Margin="0,0,20,0" VerticalAlignment="Center">
-                                    <TextBlock Text="{Binding StatusText}" FontSize="11" FontWeight="SemiBold" Foreground="{Binding StatusForegroundBrush}"/>
-                                </Border>
-
-                                <!-- Action Button -->
-                                <Button Grid.Column="4" Content="{Binding ActionButtonText}" 
-                                        Background="{Binding ActionBackgroundBrush}" 
-                                        Foreground="{Binding ActionForegroundBrush}"
-                                        Style="{StaticResource RowActionButtonStyle}"
-                                        Click="ActionButton_Click"
-                                        VerticalAlignment="Center"/>
-                            </Grid>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                    <!-- Scan Trigger Button -->
+                    <Button Grid.Column="2" x:Name="GlobalScanBtn" Content="Scan Network" 
+                            Style="{StaticResource ScanButtonStyle}"
+                            Padding="18,7"
+                            Click="GlobalScanBtn_Click"
+                            VerticalAlignment="Center"/>
+                </Grid>
             </Border>
+
+            <!-- ── Page Content Multi-View Container ── -->
+            <Grid Grid.Row="1">
+                <!-- Page 1: Overview View (Total Devices, Net Traffic Amount, Scan, ISP with dynamic logo) -->
+                <views:OverviewView x:Name="OverviewControl" Visibility="Visible" />
+
+                <!-- Page 2: Device List View (All devices with type, brand, status filtering, prominent model) -->
+                <views:DeviceListView x:Name="DeviceListControl" Visibility="Collapsed" />
+
+                <!-- Page 3: Device Detail View (Full device specifications, model identification, open ports, block) -->
+                <views:DeviceDetailView x:Name="DeviceDetailControl" Visibility="Collapsed" />
+
+                <!-- Page 4: Security View (Firewall status, isolated devices list with unblock controls) -->
+                <views:SecurityView x:Name="SecurityControl" Visibility="Collapsed" />
+
+                <!-- Page 5: Settings View (Adapter bindings, scan frequencies, database diagnostics) -->
+                <views:SettingsView x:Name="SettingsControl" Visibility="Collapsed" />
+            </Grid>
         </Grid>
     </Grid>
 </Window>

@@ -5,86 +5,80 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:models="clr-namespace:NetSentry.App.Models"
              mc:Ignorable="d" 
-             d:DesignHeight="750" d:DesignWidth="1050"
-             Background="{StaticResource BrushCanvas}">
+             d:DesignHeight="750" d:DesignWidth="1100"
+             Background="#0E131F">
 
-    <Grid Margin="24,18,24,18">
+    <Grid Margin="32,28,32,28">
         <Grid.RowDefinitions>
-            <!-- Header title & security badges -->
+            <!-- Header Title & Subtitle -->
             <RowDefinition Height="Auto" />
-            <!-- Search & Category Filters -->
+            <!-- Search & Filters Strip -->
             <RowDefinition Height="Auto" />
-            <!-- Main Device Fleet List -->
+            <!-- Device Fleet Table / List -->
             <RowDefinition Height="*" />
-            <!-- Bottom Telemetry Strip -->
+            <!-- Pagination / Telemetry Bottom Strip -->
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <!-- ══════════════════════════════════════════════
-             ROW 0: VIEW HEADER & ACTIVE SHIELD STATUS
+             ROW 0: HEADER TITLE & TOTAL COUNT
              ══════════════════════════════════════════════ -->
-        <Grid Grid.Row="0" Margin="0,0,0,16">
+        <Grid Grid.Row="0" Margin="0,0,0,20">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="0">
-                <TextBlock x:Name="TitleBlock" Text="Monitored Device Fleet"
-                           FontSize="22" FontWeight="Bold" Foreground="{StaticResource BrushTextPrimary}" Margin="0,0,0,6" />
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <Border Style="{StaticResource PillGreenStyle}" Margin="0,0,8,0">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Border Width="6" Height="6" CornerRadius="3" Background="#10B981" Margin="0,0,6,0" VerticalAlignment="Center" />
-                            <TextBlock Text="ARP Guard Active" FontSize="11" FontWeight="SemiBold" Foreground="#34D399" VerticalAlignment="Center" />
-                        </StackPanel>
-                    </Border>
-                    <Border Style="{StaticResource PillNeutralStyle}" Margin="0,0,8,0">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Border Width="6" Height="6" CornerRadius="3" Background="#38BDF8" Margin="0,0,6,0" VerticalAlignment="Center" />
-                            <TextBlock Text="Subnet Isolation Enforced" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource BrushElectricCyan}" VerticalAlignment="Center" />
-                        </StackPanel>
-                    </Border>
-                    <Border Style="{StaticResource PillNeutralStyle}">
-                        <TextBlock x:Name="UpdatedBlock" Text="Updated Just now" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource BrushTextSecondary}" VerticalAlignment="Center" />
-                    </Border>
-                </StackPanel>
+                <TextBlock x:Name="TitleBlock" Text="Device Inventory"
+                           FontSize="24" FontWeight="SemiBold" Foreground="White" Margin="0,0,0,4" />
+                <TextBlock x:Name="SubtitleBlock" Text="Showing active subnet devices • Click any host to inspect full hardware specs"
+                           FontSize="13" Foreground="#94A3B8" />
+            </StackPanel>
+
+            <!-- Protection Active Badge -->
+            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                <Border Background="#1A10B981" BorderBrush="#10B981" BorderThickness="1" CornerRadius="6" Padding="10,4" Margin="0,0,10,0">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Border Width="6" Height="6" CornerRadius="3" Background="#10B981" Margin="0,0,6,0" VerticalAlignment="Center" />
+                        <TextBlock Text="ARP Guard Active" FontSize="11.5" FontWeight="SemiBold" Foreground="#10B981" />
+                    </StackPanel>
+                </Border>
+                <Border Background="#121824" BorderBrush="#232E45" BorderThickness="1" CornerRadius="6" Padding="10,4">
+                    <TextBlock x:Name="UpdatedBlock" Text="Updated Just now" FontSize="11.5" Foreground="#94A3B8" />
+                </Border>
             </StackPanel>
         </Grid>
 
         <!-- ══════════════════════════════════════════════
-             ROW 1: SEARCH & DEVICE TYPE FILTER PILLS
+             ROW 1: SEARCH & FILTER CONTROLS (TYPE, BRAND, STATUS)
              ══════════════════════════════════════════════ -->
         <Grid Grid.Row="1" Margin="0,0,0,16">
             <Grid.ColumnDefinitions>
                 <!-- Search Box -->
-                <ColumnDefinition Width="340" />
-                <!-- Category Filter Pills -->
+                <ColumnDefinition Width="320" />
+                <!-- Filter Dropdowns -->
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <!-- Monospace Search Input -->
-            <Border Grid.Column="0" Background="#141824" BorderBrush="{StaticResource BrushBorderGlass}"
-                    BorderThickness="1" CornerRadius="8" Height="36" Padding="10,0">
+            <!-- Search input with vector icon -->
+            <Border Grid.Column="0" Background="#121824" BorderBrush="#232E45" BorderThickness="1" CornerRadius="8" Height="36" Padding="10,0">
                 <Grid VerticalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <Path Grid.Column="0" Data="{StaticResource IconSearch}" Fill="{StaticResource BrushTextMuted}"
+                    <Path Grid.Column="0" Data="{StaticResource IconSearch}" Fill="#64748B"
                           Width="13" Height="13" Stretch="Uniform" Margin="0,0,8,0" VerticalAlignment="Center" />
 
                     <TextBox Grid.Column="1" x:Name="SearchBox"
                              Background="Transparent" BorderThickness="0"
-                             Foreground="{StaticResource BrushTextPrimary}"
-                             CaretBrush="{StaticResource BrushElectricCyan}"
-                             FontFamily="Cascadia Code, Consolas" FontSize="12.5" VerticalAlignment="Center" />
+                             Foreground="White" CaretBrush="#2563EB"
+                             FontFamily="Consolas, Cascadia Code" FontSize="12.5" VerticalAlignment="Center" />
 
-                    <TextBlock Grid.Column="1" Text="Search IP, MAC, hostname or vendor..."
-                               Foreground="{StaticResource BrushTextMuted}"
-                               FontFamily="Segoe UI Variable Text"
-                               FontSize="12" IsHitTestVisible="False" VerticalAlignment="Center">
+                    <TextBlock Grid.Column="1" Text="Filter by name, model, vendor, IP..."
+                               Foreground="#64748B" FontSize="12" IsHitTestVisible="False" VerticalAlignment="Center">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Setter Property="Visibility" Value="Collapsed" />
@@ -99,304 +93,165 @@
                 </Grid>
             </Border>
 
-            <!-- Category Filter Tabs with Counters -->
-            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                <RadioButton Tag="All" IsChecked="True" Style="{StaticResource StyleCategoryFilterPill}" Click="CategoryPill_Click">
-                    <TextBlock x:Name="PillCountAll" Text="All Nodes" />
-                </RadioButton>
-                <RadioButton Tag="Workstation" Margin="6,0,0,0" Style="{StaticResource StyleCategoryFilterPill}" Click="CategoryPill_Click">
-                    <TextBlock x:Name="PillCountWorkstations" Text="Workstations" />
-                </RadioButton>
-                <RadioButton Tag="Mobile" Margin="6,0,0,0" Style="{StaticResource StyleCategoryFilterPill}" Click="CategoryPill_Click">
-                    <TextBlock x:Name="PillCountMobile" Text="Mobile" />
-                </RadioButton>
-                <RadioButton Tag="IoT" Margin="6,0,0,0" Style="{StaticResource StyleCategoryFilterPill}" Click="CategoryPill_Click">
-                    <TextBlock x:Name="PillCountIot" Text="IoT &amp; Cameras" />
-                </RadioButton>
-                <RadioButton Tag="Infrastructure" Margin="6,0,0,0" Style="{StaticResource StyleCategoryFilterPill}" Click="CategoryPill_Click">
-                    <TextBlock x:Name="PillCountInfra" Text="Infrastructure" />
-                </RadioButton>
+            <!-- Filter Dropdowns (Type, Brand, Status) -->
+            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <!-- Device Type Filter -->
+                <TextBlock Text="Type:" FontSize="12" Foreground="#64748B" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                <ComboBox x:Name="TypeFilterCombo" SelectedIndex="0" Width="130" Height="34" Margin="0,0,14,0">
+                    <ComboBoxItem Content="All Types" />
+                    <ComboBoxItem Content="Workstation" />
+                    <ComboBoxItem Content="Laptop" />
+                    <ComboBoxItem Content="Mobile" />
+                    <ComboBoxItem Content="Television" />
+                    <ComboBoxItem Content="Printer" />
+                    <ComboBoxItem Content="Router" />
+                    <ComboBoxItem Content="Smart Device" />
+                    <ComboBoxItem Content="Generic" />
+                </ComboBox>
+
+                <!-- Brand / Vendor Filter -->
+                <TextBlock Text="Brand:" FontSize="12" Foreground="#64748B" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                <ComboBox x:Name="BrandFilterCombo" SelectedIndex="0" Width="140" Height="34" Margin="0,0,14,0">
+                    <ComboBoxItem Content="All Brands" />
+                </ComboBox>
+
+                <!-- Status Filter -->
+                <TextBlock Text="Status:" FontSize="12" Foreground="#64748B" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                <ComboBox x:Name="StatusFilterCombo" SelectedIndex="0" Width="110" Height="34">
+                    <ComboBoxItem Content="All Status" />
+                    <ComboBoxItem Content="Online" />
+                    <ComboBoxItem Content="Blocked" />
+                    <ComboBoxItem Content="Offline" />
+                </ComboBox>
             </StackPanel>
         </Grid>
 
         <!-- ══════════════════════════════════════════════
-             ROW 2: RICH DEVICE CARDS (WITH EXPANDABLE DRAWER)
+             ROW 2: DEVICE FLEET LIST (CLICKABLE FOR FULL DETAILS)
              ══════════════════════════════════════════════ -->
-        <ListView Grid.Row="2" x:Name="DeviceListViewControl"
-                  Background="Transparent" BorderThickness="0"
-                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                  ScrollViewer.VerticalScrollBarVisibility="Auto"
-                  SelectionMode="Single"
-                  MouseDoubleClick="DeviceListView_MouseDoubleClick"
-                  SelectionChanged="DeviceListView_SelectionChanged">
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="Background" Value="Transparent" />
-                    <Setter Property="BorderThickness" Value="0" />
-                    <Setter Property="Padding" Value="0" />
-                    <Setter Property="Margin" Value="0,0,0,10" />
-                    <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="ListViewItem">
-                                <ContentPresenter />
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </ListView.ItemContainerStyle>
-
-            <ListView.ItemTemplate>
-                <DataTemplate DataType="{x:Type models:DeviceItem}">
-                    <!-- Card Glass Border Container -->
-                    <Border x:Name="CardBorder" Style="{StaticResource StyleGlassCard}" Padding="0" RenderTransformOrigin="0.5,0.5">
-                        <Border.RenderTransform>
-                            <TransformGroup>
-                                <ScaleTransform x:Name="CardScale" ScaleX="1.0" ScaleY="1.0" />
-                            </TransformGroup>
-                        </Border.RenderTransform>
-
-                        <!-- Right Click Context Menu -->
-                        <Border.ContextMenu>
-                            <ContextMenu Background="#0E1524" BorderBrush="{StaticResource BrushBorderGlass}" BorderThickness="1">
-                                <MenuItem Header="Inspect Device Details" Click="InspectDevice_Click" Foreground="#F8FAFC" FontWeight="SemiBold" />
-                                <Separator Background="#1E293B" />
-                                <MenuItem Header="Block Network Access" Click="BlockContext_Click" Foreground="#F87171" FontWeight="SemiBold" />
-                                <MenuItem Header="Restore Network Access" Click="UnblockContext_Click" Foreground="#34D399" />
-                                <Separator Background="#1E293B" />
-                                <MenuItem Header="Copy IP Address" Click="CopyIp_Click" Foreground="#CBD5E1" />
-                                <MenuItem Header="Copy MAC Address" Click="CopyMac_Click" Foreground="#CBD5E1" />
-                            </ContextMenu>
-                        </Border.ContextMenu>
-
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <!-- Collapsed Main Header Row -->
-                                <RowDefinition Height="Auto" />
-                                <!-- Expandable Drawer Detail View -->
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-
-                            <!-- ── TOP ROW: COLLAPSED CARD SUMMARY ── -->
-                            <Grid Grid.Row="0" Margin="16,14">
-                                <Grid.ColumnDefinitions>
-                                    <!-- Device Class Icon & Vendor Pill -->
-                                    <ColumnDefinition Width="Auto" />
-                                    <!-- Identity & Addressing -->
-                                    <ColumnDefinition Width="*" />
-                                    <!-- Latency, Ports & Expand Toggle -->
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-
-                                <!-- LEFT: Device Class Icon Capsule + Vendor Badge -->
-                                <Grid Grid.Column="0" Width="44" Height="44" Margin="0,0,16,0" VerticalAlignment="Center">
-                                    <Border CornerRadius="8" Background="#161B28" BorderBrush="{StaticResource BrushBorderGlass}" BorderThickness="1" />
-                                    <Path Fill="{StaticResource BrushElectricCyan}" Width="19" Height="19" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                        <Path.Style>
-                                            <Style TargetType="Path">
-                                                <Setter Property="Data" Value="{StaticResource IconGeneric}" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding Category}" Value="Workstation">
-                                                        <Setter Property="Data" Value="{StaticResource IconDesktop}" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Category}" Value="Mobile">
-                                                        <Setter Property="Data" Value="{StaticResource IconMobile}" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Category}" Value="Infrastructure">
-                                                        <Setter Property="Data" Value="{StaticResource IconRouter}" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Category}" Value="IoT">
-                                                        <Setter Property="Data" Value="{StaticResource IconIoT}" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Path.Style>
-                                    </Path>
-                                </Grid>
-
-                                <!-- CENTER: Friendly Name, Hostname, Monospace IP, Monospace MAC -->
-                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
-                                        <!-- Friendly Name -->
-                                        <TextBlock Text="{Binding DisplayName}" FontFamily="Segoe UI Variable Display" FontSize="14.5" FontWeight="SemiBold"
-                                                   Foreground="{StaticResource BrushTextPrimary}" Margin="0,0,10,0" TextTrimming="CharacterEllipsis" />
-                                        <!-- Vendor Brand Badge -->
-                                        <Border Background="#1C2333" CornerRadius="4" Padding="7,2" BorderBrush="#2D3A50" BorderThickness="1">
-                                            <TextBlock Text="{Binding Vendor}" FontFamily="Segoe UI Variable Small" FontSize="10" FontWeight="SemiBold"
-                                                       Foreground="{StaticResource BrushElectricCyan}" />
-                                        </Border>
-                                    </StackPanel>
-
-                                    <!-- Subline: Hostname + Monospace IP/MAC Capsules -->
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <!-- Hostname / Model -->
-                                        <TextBlock Text="{Binding Model}" FontFamily="Segoe UI Variable Text" FontSize="12" Foreground="{StaticResource BrushTextMuted}" Margin="0,0,12,0" />
-
-                                        <!-- Monospace IPv4 Capsule -->
-                                        <Border Background="#111520" CornerRadius="4" Padding="6,1" Margin="0,0,8,0" BorderBrush="{StaticResource BrushBorderGlass}" BorderThickness="1">
-                                            <TextBlock Text="{Binding Ip}" FontFamily="Cascadia Code, Consolas" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource BrushTextPrimary}" />
-                                        </Border>
-
-                                        <!-- Monospace MAC Address Capsule -->
-                                        <Border Background="#111520" CornerRadius="4" Padding="6,1" BorderBrush="{StaticResource BrushBorderGlass}" BorderThickness="1">
-                                            <TextBlock Text="{Binding MacUpper}" FontFamily="Cascadia Code, Consolas" FontSize="11" Foreground="{StaticResource BrushTextSecondary}" />
-                                        </Border>
-                                    </StackPanel>
-                                </StackPanel>
-
-                                <!-- RIGHT: Latency Indicator Pill, Ports Tag, Expand Chevron -->
-                                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                                    
-                                    <!-- Latency Heartbeat Pill -->
-                                    <Border Background="#121F28" CornerRadius="12" Padding="9,4" Margin="0,0,10,0" BorderBrush="#1C383F" BorderThickness="1">
-                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                            <Ellipse Width="7" Height="7" Fill="{Binding StatusBrush}" Style="{StaticResource StyleStatusDotPulse}" Margin="0,0,6,0" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
-                                                <Ellipse.RenderTransform>
-                                                    <ScaleTransform ScaleX="1" ScaleY="1" />
-                                                </Ellipse.RenderTransform>
-                                            </Ellipse>
-                                            <TextBlock Text="{Binding LatencyDisplay}" FontFamily="Cascadia Code, Consolas" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource BrushTextPrimary}" />
-                                        </StackPanel>
+        <Border Grid.Row="2" Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" ClipToBounds="True">
+            <ListView x:Name="DeviceListViewControl"
+                      Background="Transparent" BorderThickness="0"
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                      SelectionMode="Single"
+                      SelectionChanged="DeviceListView_SelectionChanged">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="BorderThickness" Value="0,0,0,1" />
+                        <Setter Property="BorderBrush" Value="#1C2538" />
+                        <Setter Property="Padding" Value="18,14" />
+                        <Setter Property="Cursor" Value="Hand" />
+                        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListViewItem">
+                                    <Border x:Name="rowBorder"
+                                            Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            Padding="{TemplateBinding Padding}">
+                                        <ContentPresenter VerticalAlignment="Center" />
                                     </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="rowBorder" Property="Background" Value="#1E283C" />
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter TargetName="rowBorder" Property="Background" Value="#22304A" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListView.ItemContainerStyle>
 
-                                    <!-- Active Ports Count Tag -->
-                                    <Border Background="#1E192B" CornerRadius="12" Padding="9,4" Margin="0,0,12,0" BorderBrush="#3B2A56" BorderThickness="1">
-                                        <TextBlock Text="{Binding PortsCountDisplay}" FontFamily="Cascadia Code, Consolas" FontSize="11" FontWeight="SemiBold" Foreground="#C084FC" />
-                                    </Border>
+                <ListView.ItemTemplate>
+                    <DataTemplate DataType="{x:Type models:DeviceItem}">
+                        <Grid VerticalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <!-- Col 0: Device Icon Badge -->
+                                <ColumnDefinition Width="Auto" />
+                                <!-- Col 1: Identity & Model Display -->
+                                <ColumnDefinition Width="*" />
+                                <!-- Col 2: Vendor Tag -->
+                                <ColumnDefinition Width="Auto" />
+                                <!-- Col 3: Status Badge -->
+                                <ColumnDefinition Width="Auto" />
+                                <!-- Col 4: Action Button -->
+                                <ColumnDefinition Width="Auto" />
+                                <!-- Col 5: Arrow Navigate Caret -->
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
 
-                                    <!-- Expand / Collapse Toggle Button with Rotating Chevron -->
-                                    <ToggleButton IsChecked="{Binding IsExpanded, Mode=TwoWay}" Cursor="Hand" Background="Transparent" BorderThickness="0" Width="30" Height="30">
-                                        <ToggleButton.Template>
-                                            <ControlTemplate TargetType="ToggleButton">
-                                                <Border x:Name="BtnBorder" CornerRadius="6" Background="Transparent">
-                                                    <Path x:Name="ChevronPath" Data="{StaticResource IconChevronDown}" Fill="{StaticResource BrushTextMuted}"
-                                                          Width="12" Height="12" Stretch="Uniform" RenderTransformOrigin="0.5,0.5">
-                                                        <Path.RenderTransform>
-                                                            <RotateTransform x:Name="ChevronRotate" Angle="0" />
-                                                        </Path.RenderTransform>
-                                                    </Path>
-                                                </Border>
-                                                <ControlTemplate.Triggers>
-                                                    <Trigger Property="IsChecked" Value="True">
-                                                        <Setter TargetName="ChevronPath" Property="RenderTransform">
-                                                            <Setter.Value>
-                                                                <RotateTransform Angle="180"/>
-                                                            </Setter.Value>
-                                                        </Setter>
-                                                        <Setter TargetName="ChevronPath" Property="Fill" Value="{StaticResource BrushElectricCyan}" />
-                                                    </Trigger>
-                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter TargetName="BtnBorder" Property="Background" Value="#222B3D" />
-                                                        <Setter TargetName="ChevronPath" Property="Fill" Value="{StaticResource BrushTextPrimary}" />
-                                                    </Trigger>
-                                                </ControlTemplate.Triggers>
-                                            </ControlTemplate>
-                                        </ToggleButton.Template>
-                                    </ToggleButton>
-                                </StackPanel>
-                            </Grid>
-
-                            <!-- ── EXPANDABLE DRAWER DETAIL VIEW ── -->
-                            <Border Grid.Row="1" Background="{StaticResource BrushSurfaceElevated}"
-                                    BorderBrush="{StaticResource BrushBorderGlass}" BorderThickness="0,1,0,0" Padding="18,16"
-                                    Visibility="{Binding IsExpanded, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <!-- Column A: Open Port Badges -->
-                                        <ColumnDefinition Width="2*" />
-                                        <!-- Column B: Physical Signal & Bandwidth -->
-                                        <ColumnDefinition Width="1.6*" />
-                                        <!-- Column C: Connection Timeline & Actions -->
-                                        <ColumnDefinition Width="1.6*" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <!-- SECTION A: Detected Services & Open Ports -->
-                                    <StackPanel Grid.Column="0" Margin="0,0,20,0">
-                                        <TextBlock Text="INSPECTED SERVICES &amp; PORTS" FontFamily="Segoe UI Variable Small" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,8" />
-                                        <ItemsControl ItemsSource="{Binding OpenPorts}">
-                                            <ItemsControl.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <WrapPanel Orientation="Horizontal" />
-                                                </ItemsPanelTemplate>
-                                            </ItemsControl.ItemsPanel>
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate>
-                                                    <Border CornerRadius="4" Background="#141724" BorderBrush="#2F3854" BorderThickness="1" Margin="0,0,6,6" Padding="8,4">
-                                                        <StackPanel Orientation="Horizontal">
-                                                            <TextBlock Text="{Binding PortNumber}" FontFamily="Cascadia Code, Consolas" FontWeight="Bold" FontSize="11" Foreground="{StaticResource BrushElectricCyan}" Margin="0,0,6,0" />
-                                                            <TextBlock Text="{Binding ServiceName}" FontFamily="Segoe UI Variable Small" FontSize="11" Foreground="{StaticResource BrushTextSecondary}" />
-                                                        </StackPanel>
-                                                    </Border>
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
-                                    </StackPanel>
-
-                                    <!-- SECTION B: Signal Strength & Connection Layer -->
-                                    <StackPanel Grid.Column="1" Margin="0,0,20,0">
-                                        <TextBlock Text="LINK &amp; PHYSICAL LAYER" FontFamily="Segoe UI Variable Small" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,8" />
-                                        
-                                        <!-- Interface Type & Signal dBm -->
-                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
-                                            <Path Data="{StaticResource IconWifi}" Fill="{StaticResource BrushElectricCyan}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,8,0" />
-                                            <TextBlock Text="{Binding PhysicalLinkSummary}" FontFamily="Cascadia Code, Consolas" FontSize="11.5" Foreground="{StaticResource BrushTextPrimary}" />
-                                        </StackPanel>
-
-                                        <!-- Signal Gauge Bar -->
-                                        <Grid Margin="0,0,0,8">
-                                            <ProgressBar Height="4" Maximum="100" Value="{Binding SignalQualityPercent}"
-                                                         Foreground="{StaticResource BrushStatusEmerald}" Background="#121622" BorderThickness="0" />
-                                        </Grid>
-
-                                        <TextBlock Text="{Binding LinkSpeedDisplay}" FontFamily="Segoe UI Variable Text" FontSize="11" Foreground="{StaticResource BrushTextMuted}" />
-                                    </StackPanel>
-
-                                    <!-- SECTION C: Timeline & Action Strip -->
-                                    <StackPanel Grid.Column="2">
-                                        <TextBlock Text="DIAGNOSTICS &amp; ACTIONS" FontFamily="Segoe UI Variable Small" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource BrushTextMuted}" Margin="0,0,0,8" />
-                                        
-                                        <!-- Timeline info -->
-                                        <TextBlock Text="{Binding TimelineDisplay}" FontFamily="Cascadia Code, Consolas" FontSize="11" Foreground="{StaticResource BrushTextSecondary}" Margin="0,0,0,10" />
-                                        
-                                        <!-- Action Buttons -->
-                                        <StackPanel Orientation="Horizontal">
-                                            <Button Content="Deep Audit" Padding="12,5" Background="#162232" BorderBrush="{StaticResource BrushElectricCyan}" BorderThickness="1"
-                                                    Foreground="{StaticResource BrushElectricCyan}" FontFamily="Segoe UI Variable Small" FontSize="11" Margin="0,0,8,0" Cursor="Hand" Click="DeepAudit_Click" />
-                                            <Button Content="{Binding BlockButtonText}" Padding="12,5"
-                                                    Background="{Binding StatusBadgeBg}" BorderBrush="{Binding StatusBorderColor}" BorderThickness="1"
-                                                    Foreground="{Binding StatusBadgeFg}" FontFamily="Segoe UI Variable Small" FontSize="11" Cursor="Hand" Click="ToggleBlock_Click" />
-                                        </StackPanel>
-                                    </StackPanel>
-                                </Grid>
+                            <!-- Col 0: Device Icon Badge -->
+                            <Border Grid.Column="0" Background="#121824" Width="44" Height="44" CornerRadius="10" Margin="0,0,18,0" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding IconGlyph}" FontFamily="Segoe MDL2 Assets" Foreground="#94A3B8" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Border>
-                        </Grid>
-                    </Border>
 
-                    <!-- Hover and Animation Triggers -->
-                    <DataTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="CardBorder" Property="BorderBrush" Value="{StaticResource BrushElectricCyan}" />
-                            <Setter TargetName="CardBorder" Property="Background" Value="#1D2230" />
-                        </Trigger>
-                    </DataTemplate.Triggers>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+                            <!-- Col 1: Friendly Name, Device Model, IP & MAC -->
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,18,0">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,4">
+                                    <!-- Friendly Name -->
+                                    <TextBlock Text="{Binding DisplayName}" FontSize="14.5" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
+                                    
+                                    <!-- Device Model prominently displayed -->
+                                    <Border Background="#1C2538" BorderBrush="#28354E" BorderThickness="1" CornerRadius="4" Padding="7,2" Margin="10,0,0,0" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Model, StringFormat='Model: {0}'}" FontSize="11" FontWeight="SemiBold" Foreground="#38BDF8"/>
+                                    </Border>
+                                </StackPanel>
+
+                                <!-- Subline: IP Address • MAC Address -->
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Ip}" FontSize="12" Foreground="#94A3B8" FontFamily="Consolas, Cascadia Code"/>
+                                    <TextBlock Text=" • " Foreground="#64748B"/>
+                                    <TextBlock Text="{Binding MacUpper}" FontSize="12" Foreground="#64748B" FontFamily="Consolas, Cascadia Code"/>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <!-- Col 2: Vendor Tag -->
+                            <Border Grid.Column="2" Background="#121824" BorderBrush="#232E45" BorderThickness="1" CornerRadius="6" Padding="10,4" Margin="0,0,18,0" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding Vendor}" FontSize="11" Foreground="#CBD5E1"/>
+                            </Border>
+
+                            <!-- Col 3: Status Badge -->
+                            <Border Grid.Column="3" Background="{Binding StatusBackgroundBrush}" CornerRadius="12" Padding="12,4" Margin="0,0,16,0" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding StatusText}" FontSize="11" FontWeight="SemiBold" Foreground="{Binding StatusForegroundBrush}"/>
+                            </Border>
+
+                            <!-- Col 4: Action Button (Block / Unblock) -->
+                            <Button Grid.Column="4" Content="{Binding ActionButtonText}" 
+                                    Background="{Binding ActionBackgroundBrush}" 
+                                    Foreground="{Binding ActionForegroundBrush}"
+                                    Style="{StaticResource RowActionButtonStyle}"
+                                    Click="ActionButton_Click"
+                                    Margin="0,0,14,0"
+                                    VerticalAlignment="Center"/>
+
+                            <!-- Col 5: Arrow Caret -->
+                            <TextBlock Grid.Column="5" Text="&#xE76C;" FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="#64748B" VerticalAlignment="Center"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Border>
 
         <!-- ══════════════════════════════════════════════
              ROW 3: BOTTOM TELEMETRY STRIP
              ══════════════════════════════════════════════ -->
-        <Grid Grid.Row="3" Margin="0,12,0,0">
+        <Grid Grid.Row="3" Margin="0,14,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" x:Name="PaginationBlock" Text="Displaying 0 of 0 active devices on subnet"
-                       Foreground="{StaticResource BrushTextMuted}" FontSize="12" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="0" x:Name="PaginationBlock" Text="Showing 0 active devices on subnet"
+                       Foreground="#64748B" FontSize="12" VerticalAlignment="Center" />
 
-            <TextBlock Grid.Column="1" Text="Expand any card for open ports &amp; RF signal • Right-click for firewall block"
-                       Foreground="{StaticResource BrushTextMuted}" FontSize="11" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="1" Text="Click any device to view hardware specs, model information, and open ports"
+                       Foreground="#64748B" FontSize="11.5" VerticalAlignment="Center" />
         </Grid>
     </Grid>
 </UserControl>

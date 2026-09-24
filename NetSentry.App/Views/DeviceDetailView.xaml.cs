@@ -25,19 +25,51 @@ namespace NetSentry.App.Views
         {
             _currentDevice = device;
             DataContext = device;
+            device.EnsureDefaultPortsAndLink();
 
+            // Header titles
             DeviceNameBlock.Text = device.DisplayName;
-            TypePillBlock.Text = device.TypeDisplay;
-            ModelPillBlock.Text = device.Model;
-            OsPillBlock.Text = device.Os;
+            DeviceSubtitleBlock.Text = $"{device.Vendor} • IP: {device.Ip} • MAC: {device.MacUpper}";
 
+            // Prominent Model Identification Banner
+            ProminentModelBlock.Text = device.Model;
+            ProminentVendorBlock.Text = $"Manufacturer: {device.Vendor} • Device class: {device.TypeDisplay} • Detected via OUI & broadcast fingerprints";
+            DeviceIconGlyphBlock.Text = device.IconGlyph;
+
+            // Badges
+            TypePillBlock.Text = $"Category: {device.TypeDisplay}";
+            OsPillBlock.Text = $"OS: {device.Os}";
+            LatencyPillBlock.Text = $"Latency: {device.LatencyDisplay}";
+
+            // Specification Values
             IpValBlock.Text = string.IsNullOrWhiteSpace(device.Ip) ? "—" : device.Ip;
             MacValBlock.Text = string.IsNullOrWhiteSpace(device.Mac) ? "—" : device.MacUpper;
             BrandValBlock.Text = device.Vendor;
             ModelValBlock.Text = device.Model;
             OsValBlock.Text = device.Os;
+            HostnameValBlock.Text = string.IsNullOrWhiteSpace(device.Hostname) ? (string.IsNullOrWhiteSpace(device.Ip) ? "—" : $"host-{device.Ip.Replace('.', '-')}.lan") : device.Hostname;
             BrandAvatarBlock.Text = device.BrandInitials;
             AuditStatusBlock.Text = $"Observed {device.TimesSeen} time(s) • Last active {device.LastUpdateText}";
+
+            // Link & Telemetry
+            MediumValBlock.Text = device.PhysicalLinkSummary;
+            SpeedValBlock.Text = device.LinkSpeedDisplay;
+            LatencyValBlock.Text = $"{device.LatencyDisplay} (ICMP Round-Trip)";
+            SignalProgressBar.Value = Math.Clamp(device.SignalQualityPercent, 10, 100);
+            SignalValBlock.Text = $"{device.SignalQualityPercent}% ({(device.SignalQualityPercent >= 75 ? "Excellent" : (device.SignalQualityPercent >= 50 ? "Good" : "Fair"))})";
+
+            // Open Ports
+            PortsItemsControl.ItemsSource = device.OpenPorts;
+            PortsSummaryBlock.Text = $"{device.OpenPorts.Count} Port(s) Active";
+            bool hasRisk = false;
+            foreach (var p in device.OpenPorts)
+            {
+                if (p.IsSecurityRisk) hasRisk = true;
+            }
+            VulnerablePortsBlock.Text = hasRisk ? "ALERT / RISK" : "SECURE";
+            VulnerablePortsBlock.Foreground = hasRisk 
+                ? new SolidColorBrush(Color.FromRgb(0xEF, 0x44, 0x44)) 
+                : new SolidColorBrush(Color.FromRgb(0x10, 0xB9, 0x81));
 
             RevertBtn.Visibility = string.IsNullOrWhiteSpace(device.CustomName) ? Visibility.Collapsed : Visibility.Visible;
 
@@ -57,6 +89,7 @@ namespace NetSentry.App.Views
 
                 IsolationStatusBlock.Text = "Hardware Block Active";
                 IsolationStatusBlock.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F87171"));
+                IsolationDescBlock.Text = "Host ARP requests are poisoned. All router and external network traffic is disconnected.";
 
                 StatusPillBorder.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#33161C"));
                 StatusPillBorder.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#542129"));
@@ -72,15 +105,16 @@ namespace NetSentry.App.Views
                 BlockButton.Foreground = new SolidColorBrush(Colors.White);
 
                 IsolationStatusBlock.Text = "Unrestricted Access";
-                IsolationStatusBlock.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#34D399"));
+                IsolationStatusBlock.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#10B981"));
+                IsolationDescBlock.Text = "Host has standard bidirectional gateway routing on the local subnet.";
 
                 if (_currentDevice.IsOnline)
                 {
-                    StatusPillBorder.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#064E3B"));
-                    StatusPillBorder.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#059669"));
+                    StatusPillBorder.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1A10B981"));
+                    StatusPillBorder.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#10B981"));
                     StatusPillDot.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#10B981"));
                     StatusPillBlock.Text = "Online";
-                    StatusPillBlock.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#34D399"));
+                    StatusPillBlock.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#10B981"));
                 }
                 else
                 {
@@ -137,7 +171,7 @@ namespace NetSentry.App.Views
                 }
 
                 var result = MessageBox.Show(
-                    $"Block internet access for:\n\n  {_currentDevice.DisplayName}\n  IP: {_currentDevice.Ip}\n  MAC: {_currentDevice.MacUpper}\n\nThis device will lose network connectivity via ARP isolation.",
+                    $"Block internet access for:\n\n  {_currentDevice.DisplayName}\n  Model: {_currentDevice.Model}\n  IP: {_currentDevice.Ip}\n  MAC: {_currentDevice.MacUpper}\n\nThis device will lose network connectivity via ARP isolation.",
                     "Confirm Network Block",
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Warning);
@@ -160,15 +194,16 @@ namespace NetSentry.App.Views
             if (dlg.ShowDialog() == true && !string.IsNullOrWhiteSpace(dlg.EnteredName))
             {
                 _currentDevice.CustomName = dlg.EnteredName;
-                DeviceNameBlock.Text = _currentDevice.CustomName;
+                DeviceNameBlock.Text = _currentDevice.DisplayName;
                 RevertBtn.Visibility = Visibility.Visible;
-                RenameRequested?.Invoke(_currentDevice.Mac, _currentDevice.CustomName);
+                RenameRequested?.Invoke(_currentDevice.Mac, dlg.EnteredName);
             }
         }
 
         private void Revert_Click(object sender, RoutedEventArgs e)
         {
             if (_currentDevice == null) return;
+
             _currentDevice.CustomName = string.Empty;
             DeviceNameBlock.Text = _currentDevice.DisplayName;
             RevertBtn.Visibility = Visibility.Collapsed;
