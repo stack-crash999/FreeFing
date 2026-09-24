@@ -6,7 +6,7 @@
              xmlns:models="clr-namespace:NetSentry.App.Models"
              mc:Ignorable="d" 
              d:DesignHeight="750" d:DesignWidth="1100"
-             Background="#0E131F">
+             Background="Transparent">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="32,28,32,28">
         <StackPanel MaxWidth="1200" HorizontalAlignment="Stretch">
@@ -21,13 +21,13 @@
                 <StackPanel Grid.Column="0">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <TextBlock Text="&#xEBE8;" FontFamily="Segoe MDL2 Assets" FontSize="22" Foreground="#2563EB" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                        <TextBlock Text="Network Defense &amp; Security" FontSize="24" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
+                        <TextBlock Text="Network Defense &amp; Security" FontSize="24" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
                         <Border Background="#1A10B981" BorderBrush="#10B981" BorderThickness="1" CornerRadius="6" Padding="8,2" Margin="14,0,0,0" VerticalAlignment="Center">
                             <TextBlock Text="Firewall Active" FontSize="11" FontWeight="SemiBold" Foreground="#10B981"/>
                         </Border>
                     </StackPanel>
                     <TextBlock Text="Real-time ARP packet inspection, hardware rogue isolation, and subnet boundary enforcement"
-                               FontSize="13" Foreground="#94A3B8" Margin="32,4,0,0" />
+                               FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}" Margin="32,4,0,0" />
                 </StackPanel>
             </Grid>
 
@@ -44,47 +44,47 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Card 1: ARP Guard -->
-                <Border Grid.Column="0" Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="18,16">
+                <Border Grid.Column="0" Background="{DynamicResource BgCardBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="12" Padding="18,16">
                     <StackPanel>
-                        <TextBlock Text="ARP GUARD ENGINE" FontSize="11" FontWeight="Bold" Foreground="#64748B"/>
+                        <TextBlock Text="ARP GUARD ENGINE" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}"/>
                         <TextBlock Text="Active" FontSize="22" FontWeight="Bold" Foreground="#10B981" Margin="0,4,0,2"/>
-                        <TextBlock Text="Bidirectional spoofing defense" FontSize="11" Foreground="#94A3B8"/>
+                        <TextBlock Text="Bidirectional spoofing defense" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Card 2: Gateway Defense -->
-                <Border Grid.Column="2" Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="18,16">
+                <Border Grid.Column="2" Background="{DynamicResource BgCardBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="12" Padding="18,16">
                     <StackPanel>
-                        <TextBlock Text="GATEWAY DEFENSE" FontSize="11" FontWeight="Bold" Foreground="#64748B"/>
+                        <TextBlock Text="GATEWAY DEFENSE" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}"/>
                         <TextBlock x:Name="GatewayDefBlock" Text="Protected" FontSize="22" FontWeight="Bold" Foreground="#38BDF8" Margin="0,4,0,2"/>
-                        <TextBlock Text="Router MAC locking verified" FontSize="11" Foreground="#94A3B8"/>
+                        <TextBlock Text="Router MAC locking verified" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Card 3: Isolated Hosts -->
-                <Border Grid.Column="4" Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="18,16">
+                <Border Grid.Column="4" Background="{DynamicResource BgCardBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="12" Padding="18,16">
                     <StackPanel>
-                        <TextBlock Text="ISOLATED / BLOCKED" FontSize="11" FontWeight="Bold" Foreground="#64748B"/>
+                        <TextBlock Text="ISOLATED / BLOCKED" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}"/>
                         <TextBlock x:Name="BlockedCountBlock" Text="0 Devices" FontSize="22" FontWeight="Bold" Foreground="#F43F5E" Margin="0,4,0,2"/>
-                        <TextBlock Text="Restricted from internet access" FontSize="11" Foreground="#94A3B8"/>
+                        <TextBlock Text="Restricted from internet access" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Card 4: Subnet Boundary -->
-                <Border Grid.Column="6" Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="18,16">
+                <Border Grid.Column="6" Background="{DynamicResource BgCardBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="12" Padding="18,16">
                     <StackPanel>
-                        <TextBlock Text="SUBNET BOUNDARY" FontSize="11" FontWeight="Bold" Foreground="#64748B"/>
+                        <TextBlock Text="SUBNET BOUNDARY" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}"/>
                         <TextBlock Text="Strict Isolation" FontSize="22" FontWeight="Bold" Foreground="#10B981" Margin="0,4,0,2"/>
-                        <TextBlock Text="Foreign host packets dropped" FontSize="11" Foreground="#94A3B8"/>
+                        <TextBlock Text="Foreign host packets dropped" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
                     </StackPanel>
                 </Border>
             </Grid>
 
             <!-- ── Active Blocked Devices Section ── -->
-            <Border Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="20,18" Margin="0,0,0,24">
+            <Border Background="{DynamicResource BgCardBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="12" Padding="20,18" Margin="0,0,0,24">
                 <StackPanel>
                     <Grid Margin="0,0,0,16">
-                        <TextBlock Text="CURRENTLY ISOLATED HOSTS (BLOCKED FROM INTERNET)" FontSize="11.5" FontWeight="Bold" Foreground="#64748B" VerticalAlignment="Center"/>
+                        <TextBlock Text="CURRENTLY ISOLATED HOSTS (BLOCKED FROM INTERNET)" FontSize="11.5" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center"/>
                         <TextBlock x:Name="BlockedListCountBlock" Text="0 Target(s)" FontSize="11" Foreground="#F43F5E" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                     </Grid>
 
@@ -92,7 +92,7 @@
                               ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                         <ListView.ItemTemplate>
                             <DataTemplate DataType="{x:Type models:DeviceItem}">
-                                <Border Background="#121824" BorderBrush="#33161C" BorderThickness="1" CornerRadius="8" Padding="16,12" Margin="0,0,0,8">
+                                <Border Background="{DynamicResource BgInputBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="8" Padding="16,12" Margin="0,0,0,8">
                                     <Grid VerticalAlignment="Center">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto" />
@@ -107,15 +107,15 @@
 
                                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                             <StackPanel Orientation="Horizontal" Margin="0,0,0,2">
-                                                <TextBlock Text="{Binding DisplayName}" FontSize="14" FontWeight="Bold" Foreground="White" Margin="0,0,10,0"/>
-                                                <Border Background="#1C2538" CornerRadius="4" Padding="6,2">
+                                                <TextBlock Text="{Binding DisplayName}" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,10,0"/>
+                                                <Border Background="{DynamicResource BgCardBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="4" Padding="6,2">
                                                     <TextBlock Text="{Binding Model, StringFormat='Model: {0}'}" FontSize="11" FontWeight="SemiBold" Foreground="#38BDF8"/>
                                                 </Border>
                                             </StackPanel>
-                                            <TextBlock Text="{Binding Ip, StringFormat='IP: {0}'}" FontSize="12" Foreground="#94A3B8" FontFamily="Consolas"/>
+                                            <TextBlock Text="{Binding Ip, StringFormat='IP: {0}'}" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" FontFamily="Consolas, Cascadia Code"/>
                                         </StackPanel>
 
-                                        <TextBlock Grid.Column="2" Text="{Binding MacUpper}" FontSize="12" Foreground="#64748B" FontFamily="Consolas" Margin="0,0,20,0" VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="2" Text="{Binding MacUpper}" FontSize="12" Foreground="{DynamicResource TextMutedBrush}" FontFamily="Consolas, Cascadia Code" Margin="0,0,20,0" VerticalAlignment="Center"/>
 
                                         <Button Grid.Column="3" Content="Restore Access" Click="Unblock_Click"
                                                 Style="{StaticResource TopNavButtonStyle}" Padding="12,6" FontSize="11.5" VerticalAlignment="Center" />
@@ -126,11 +126,11 @@
                     </ListView>
 
                     <!-- Empty state -->
-                    <Border x:Name="NoBlockedBorder" Background="#121824" CornerRadius="8" Padding="20" HorizontalAlignment="Stretch">
+                    <Border x:Name="NoBlockedBorder" Background="{DynamicResource BgInputBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="8" Padding="20" HorizontalAlignment="Stretch">
                         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                             <TextBlock Text="&#xE73E;" FontFamily="Segoe MDL2 Assets" FontSize="28" Foreground="#10B981" HorizontalAlignment="Center" Margin="0,0,0,8"/>
-                            <TextBlock Text="No devices currently isolated" FontSize="14" FontWeight="SemiBold" Foreground="White" HorizontalAlignment="Center"/>
-                            <TextBlock Text="All verified network hosts currently communicate freely through the default gateway." FontSize="12" Foreground="#64748B" HorizontalAlignment="Center" Margin="0,4,0,0"/>
+                            <TextBlock Text="No devices currently isolated" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="All verified network hosts currently communicate freely through the default gateway." FontSize="12" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Center" Margin="0,4,0,0"/>
                         </StackPanel>
                     </Border>
                 </StackPanel>
@@ -145,20 +145,20 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Defense Mechanics -->
-                <Border Grid.Column="0" Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="20,18">
+                <Border Grid.Column="0" Background="{DynamicResource BgCardBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="12" Padding="20,18">
                     <StackPanel>
-                        <TextBlock Text="HOW HARDWARE ISOLATION OPERATES" FontSize="11" FontWeight="Bold" Foreground="#64748B" Margin="0,0,0,12"/>
+                        <TextBlock Text="HOW HARDWARE ISOLATION OPERATES" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}" Margin="0,0,0,12"/>
                         <TextBlock Text="NetSentry utilizes local ARP spoof redirection. When an untrusted host or rogue device is blocked, NetSentry emits localized ARP replies linking the target's traffic away from the default gateway, silently disconnecting it from external internet while keeping the rest of your network uninterrupted."
-                                   FontSize="12.5" Foreground="#94A3B8" TextWrapping="Wrap" LineHeight="19"/>
+                                   FontSize="12.5" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap" LineHeight="19"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Subnet Guard -->
-                <Border Grid.Column="2" Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="20,18">
+                <Border Grid.Column="2" Background="{DynamicResource BgCardBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="12" Padding="20,18">
                     <StackPanel>
-                        <TextBlock Text="SUBNET INTEGRITY ENFORCEMENT" FontSize="11" FontWeight="Bold" Foreground="#64748B" Margin="0,0,0,12"/>
+                        <TextBlock Text="SUBNET INTEGRITY ENFORCEMENT" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}" Margin="0,0,0,12"/>
                         <TextBlock Text="Whenever your PC connects to a new Wi-Fi or Ethernet network, NetSentry dynamically re-binds discovery filters to the exact CIDR subnet (e.g. 192.168.1.0/24). All foreign and cached devices from previous networks are instantly purged to ensure 100% data privacy."
-                                   FontSize="12.5" Foreground="#94A3B8" TextWrapping="Wrap" LineHeight="19"/>
+                                   FontSize="12.5" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap" LineHeight="19"/>
                     </StackPanel>
                 </Border>
             </Grid>

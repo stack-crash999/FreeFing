@@ -3,9 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d"
+             mc:Ignorable="d" 
              d:DesignHeight="750" d:DesignWidth="1100"
-             Background="#0E131F">
+             Background="Transparent">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="32,28,32,28">
         <StackPanel MaxWidth="1200" HorizontalAlignment="Stretch">
@@ -22,19 +22,19 @@
                 <StackPanel Grid.Column="0">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Border Width="10" Height="10" CornerRadius="5" Background="#10B981" Margin="0,0,10,0" />
-                        <TextBlock x:Name="NetNameTitleBlock" Text="Network Overview" FontSize="24" FontWeight="SemiBold" Foreground="White" />
-                        <Border Background="#1A2563EB" BorderBrush="#2563EB" BorderThickness="1" CornerRadius="6"
+                        <TextBlock x:Name="NetNameTitleBlock" Text="Network Overview" FontSize="24" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" />
+                        <Border Background="#1A2563EB" BorderBrush="{DynamicResource AccentBlueBrush}" BorderThickness="1" CornerRadius="6"
                                 Padding="8,2" Margin="14,0,0,0" VerticalAlignment="Center">
                             <TextBlock Text="Monitored Subnet" FontSize="11" FontWeight="SemiBold" Foreground="#38BDF8" />
                         </Border>
                     </StackPanel>
                     <TextBlock x:Name="NetSubtitleBlock" Text="Connected to Home Subnet • 192.168.1.0/24  •  Hardware Defense: Active"
-                               FontSize="13" Foreground="#94A3B8" Margin="20,4,0,0" />
+                               FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}" Margin="20,4,0,0" />
                 </StackPanel>
 
                 <!-- Last updated timestamp -->
                 <TextBlock Grid.Column="1" x:Name="LastUpdatedBlock" Text="Updated just now" FontSize="12"
-                           Foreground="#64748B" VerticalAlignment="Center" />
+                           Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center" />
             </Grid>
 
             <!-- ══════════════════════════════════════════════
@@ -52,7 +52,7 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- CARD 1: TOTAL DEVICES -->
-                <Border Grid.Column="0" Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="18,16"
+                <Border Grid.Column="0" Background="{DynamicResource BgCardBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="12" Padding="18,16"
                         Cursor="Hand" MouseLeftButtonUp="TotalDevicesCard_Click" ToolTip="Click to view all devices">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -61,16 +61,16 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="TOTAL MONITORED DEVICES" FontSize="11" FontWeight="Bold" Foreground="#64748B"/>
+                            <TextBlock Text="TOTAL MONITORED DEVICES" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}"/>
                             <TextBlock Text=" &#xE7F5;" FontFamily="Segoe MDL2 Assets" FontSize="11" Foreground="#38BDF8" Margin="4,0,0,0" VerticalAlignment="Center"/>
                         </StackPanel>
-                        <TextBlock Grid.Row="1" x:Name="TotalDevicesBlock" Text="0" FontSize="28" FontWeight="Bold" Foreground="White" Margin="0,4,0,2"/>
+                        <TextBlock Grid.Row="1" x:Name="TotalDevicesBlock" Text="0" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,4,0,2"/>
                         <TextBlock Grid.Row="2" x:Name="DevicesSubtitleBlock" Text="0 Active Online • 0 Blocked" FontSize="11.5" Foreground="#10B981"/>
                     </Grid>
                 </Border>
 
                 <!-- CARD 2: NETWORK TRAFFIC AMOUNT -->
-                <Border Grid.Column="2" Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="18,16">
+                <Border Grid.Column="2" Background="{DynamicResource BgCardBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="12" Padding="18,16">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -79,52 +79,52 @@
                         </Grid.RowDefinitions>
                         <StackPanel Orientation="Horizontal">
                             <Path Data="{StaticResource IconTraffic}" Fill="#38BDF8" Width="12" Height="12" Stretch="Uniform" Margin="0,0,6,0" VerticalAlignment="Center"/>
-                            <TextBlock Text="NETWORK TRAFFIC AMOUNT" FontSize="11" FontWeight="Bold" Foreground="#64748B"/>
+                            <TextBlock Text="NETWORK TRAFFIC AMOUNT" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}"/>
                         </StackPanel>
-                        <TextBlock Grid.Row="1" x:Name="TrafficRateBlock" Text="0.0 KB/s ↓  0.0 KB/s ↑" FontFamily="Consolas, Cascadia Code" FontSize="20" FontWeight="Bold" Foreground="White" Margin="0,6,0,2"/>
-                        <TextBlock Grid.Row="2" x:Name="TrafficTotalBlock" Text="Total: 0 MB Down • 0 MB Up" FontFamily="Segoe UI Variable Small" FontSize="11.5" Foreground="#94A3B8"/>
+                        <TextBlock Grid.Row="1" x:Name="TrafficRateBlock" Text="0.0 KB/s ↓  0.0 KB/s ↑" FontFamily="Consolas, Cascadia Code" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,6,0,2"/>
+                        <TextBlock Grid.Row="2" x:Name="TrafficTotalBlock" Text="Total: 0 MB Down • 0 MB Up" FontSize="11.5" Foreground="{DynamicResource TextSecondaryBrush}"/>
                     </Grid>
                 </Border>
 
                 <!-- CARD 3: SCAN & DISCOVERY -->
-                <Border Grid.Column="4" Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="18,16">
+                <Border Grid.Column="4" Background="{DynamicResource BgCardBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="12" Padding="18,16">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Text="ACTIVE DISCOVERY SCAN" FontSize="11" FontWeight="Bold" Foreground="#64748B"/>
+                        <TextBlock Text="ACTIVE DISCOVERY SCAN" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}"/>
                         
                         <Button Grid.Row="1" x:Name="ScanActionButton" Content="Scan Network" 
                                 Style="{StaticResource ScanButtonStyle}"
                                 Height="34" Margin="0,8,0,6" HorizontalAlignment="Left"
                                 Click="ScanActionButton_Click"/>
 
-                        <TextBlock Grid.Row="2" x:Name="ScanPhaseDescBlock" Text="Subnet: 192.168.1.0/24 • ARP &amp; UPnP" FontSize="11" Foreground="#64748B" TextTrimming="CharacterEllipsis"/>
+                        <TextBlock Grid.Row="2" x:Name="ScanPhaseDescBlock" Text="Subnet: 192.168.1.0/24 • ARP &amp; UPnP" FontSize="11" Foreground="{DynamicResource TextMutedBrush}" TextTrimming="CharacterEllipsis"/>
                     </Grid>
                 </Border>
 
                 <!-- CARD 4: ISP PROVIDER WITH BRAND LOGO -->
-                <Border Grid.Column="6" Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="18,16">
+                <Border Grid.Column="6" Background="{DynamicResource BgCardBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="12" Padding="18,16">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Text="SERVICE PROVIDER (ISP)" FontSize="11" FontWeight="Bold" Foreground="#64748B"/>
+                        <TextBlock Text="SERVICE PROVIDER (ISP)" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}"/>
                         
                         <!-- ISP Name & Logo Row -->
                         <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,6,0,2">
                             <!-- ISP Vector Logo -->
-                            <Border Width="30" Height="30" CornerRadius="6" Background="#121824" BorderBrush="#232E45" BorderThickness="1" Margin="0,0,10,0">
-                                <Path x:Name="IspLogoPath" Data="{StaticResource LogoGlobe}" Fill="#2563EB" Width="17" Height="17" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Border Width="30" Height="30" CornerRadius="6" Background="{DynamicResource BgInputBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1" Margin="0,0,10,0">
+                                <Path x:Name="IspLogoPath" Data="{StaticResource LogoGlobe}" Fill="{DynamicResource AccentBlueBrush}" Width="17" Height="17" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Border>
-                            <TextBlock x:Name="IspNameBlock" Text="Broadband Network" FontSize="16" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                            <TextBlock x:Name="IspNameBlock" Text="Broadband Network" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
                         </StackPanel>
 
-                        <TextBlock Grid.Row="2" x:Name="IspSublineBlock" Text="Public IP: Resolving..." FontSize="11" Foreground="#94A3B8" TextTrimming="CharacterEllipsis"/>
+                        <TextBlock Grid.Row="2" x:Name="IspSublineBlock" Text="Public IP: Resolving..." FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" TextTrimming="CharacterEllipsis"/>
                     </Grid>
                 </Border>
             </Grid>
@@ -132,7 +132,7 @@
             <!-- ══════════════════════════════════════════════
                  NETWORK ARCHITECTURE & LATENCY STRIP
                  ══════════════════════════════════════════════ -->
-            <Border Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="20,16" Margin="0,0,0,24">
+            <Border Background="{DynamicResource BgCardBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="12" Padding="20,16" Margin="0,0,0,24">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -146,41 +146,41 @@
 
                     <!-- Section 1: Local IP -->
                     <StackPanel Grid.Column="0" Margin="0,0,16,0">
-                        <TextBlock Text="LOCAL INTERFACE IP" FontSize="10.5" FontWeight="Bold" Foreground="#64748B"/>
-                        <TextBlock x:Name="LocalIpValBlock" Text="Detecting..." FontFamily="Consolas, Cascadia Code" FontSize="16" FontWeight="SemiBold" Foreground="White" Margin="0,4,0,2"/>
-                        <TextBlock x:Name="SubnetValBlock" Text="Mask: 255.255.255.0" FontSize="11" Foreground="#94A3B8"/>
+                        <TextBlock Text="LOCAL INTERFACE IP" FontSize="10.5" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}"/>
+                        <TextBlock x:Name="LocalIpValBlock" Text="Detecting..." FontFamily="Consolas, Cascadia Code" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,4,0,2"/>
+                        <TextBlock x:Name="SubnetValBlock" Text="Mask: 255.255.255.0" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
                     </StackPanel>
 
-                    <Border Grid.Column="1" Background="#232E45"/>
+                    <Border Grid.Column="1" Background="{DynamicResource BorderSubtleBrush}"/>
 
                     <!-- Section 2: Gateway Router -->
                     <StackPanel Grid.Column="2" Margin="16,0,16,0">
-                        <TextBlock Text="DEFAULT GATEWAY" FontSize="10.5" FontWeight="Bold" Foreground="#64748B"/>
-                        <TextBlock x:Name="GatewayIpValBlock" Text="Detecting..." FontFamily="Consolas, Cascadia Code" FontSize="16" FontWeight="SemiBold" Foreground="White" Margin="0,4,0,2"/>
-                        <TextBlock x:Name="GatewayMacValBlock" Text="MAC: --" FontFamily="Consolas, Cascadia Code" FontSize="11" Foreground="#94A3B8"/>
+                        <TextBlock Text="DEFAULT GATEWAY" FontSize="10.5" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}"/>
+                        <TextBlock x:Name="GatewayIpValBlock" Text="Detecting..." FontFamily="Consolas, Cascadia Code" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,4,0,2"/>
+                        <TextBlock x:Name="GatewayMacValBlock" Text="MAC: --" FontFamily="Consolas, Cascadia Code" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
                     </StackPanel>
 
-                    <Border Grid.Column="3" Background="#232E45"/>
+                    <Border Grid.Column="3" Background="{DynamicResource BorderSubtleBrush}"/>
 
                     <!-- Section 3: Public Edge IP -->
                     <StackPanel Grid.Column="4" Margin="16,0,16,0">
-                        <TextBlock Text="PUBLIC EDGE ADDRESS" FontSize="10.5" FontWeight="Bold" Foreground="#64748B"/>
-                        <TextBlock x:Name="PublicIpValBlock" Text="Resolving..." FontFamily="Consolas, Cascadia Code" FontSize="16" FontWeight="SemiBold" Foreground="White" Margin="0,4,0,2"/>
-                        <TextBlock x:Name="LocationValBlock" Text="United States" FontSize="11" Foreground="#94A3B8"/>
+                        <TextBlock Text="PUBLIC EDGE ADDRESS" FontSize="10.5" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}"/>
+                        <TextBlock x:Name="PublicIpValBlock" Text="Resolving..." FontFamily="Consolas, Cascadia Code" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,4,0,2"/>
+                        <TextBlock x:Name="LocationValBlock" Text="United States" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
                     </StackPanel>
 
-                    <Border Grid.Column="5" Background="#232E45"/>
+                    <Border Grid.Column="5" Background="{DynamicResource BorderSubtleBrush}"/>
 
                     <!-- Section 4: Ping Latency -->
                     <StackPanel Grid.Column="6" Margin="16,0,0,0">
-                        <TextBlock Text="ROUNDTRIP PING LATENCY" FontSize="10.5" FontWeight="Bold" Foreground="#64748B"/>
+                        <TextBlock Text="ROUNDTRIP PING LATENCY" FontSize="10.5" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}"/>
                         <StackPanel Orientation="Horizontal" Margin="0,4,0,2">
                             <TextBlock x:Name="PingValBlock" Text="-- ms" FontFamily="Consolas, Cascadia Code" FontSize="16" FontWeight="Bold" Foreground="#10B981" Margin="0,0,8,0"/>
                             <Border Background="#1A10B981" CornerRadius="4" Padding="6,1" VerticalAlignment="Center">
                                 <TextBlock Text="Optimal" FontSize="10" FontWeight="SemiBold" Foreground="#10B981"/>
                             </Border>
                         </StackPanel>
-                        <TextBlock Text="Target: 8.8.8.8 (Google DNS)" FontSize="11" Foreground="#64748B"/>
+                        <TextBlock Text="Target: 8.8.8.8 (Google DNS)" FontSize="11" Foreground="{DynamicResource TextMutedBrush}"/>
                     </StackPanel>
                 </Grid>
             </Border>
@@ -188,7 +188,7 @@
             <!-- ══════════════════════════════════════════════
                  SCANNER & LOG AUDIT CONSOLE
                  ══════════════════════════════════════════════ -->
-            <Border Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="20">
+            <Border Background="{DynamicResource BgCardBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="12" Padding="20">
                 <StackPanel>
                     <!-- Console Header -->
                     <Grid Margin="0,0,0,14">
@@ -200,9 +200,9 @@
                         <StackPanel Grid.Column="0">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <Path Data="{StaticResource IconSearch}" Fill="#38BDF8" Width="13" Height="13" Stretch="Uniform" Margin="0,0,8,0" VerticalAlignment="Center" />
-                                <TextBlock Text="REALTIME NETWORK DISCOVERY &amp; AUDIT LOG" FontSize="13" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" />
+                                <TextBlock Text="REALTIME NETWORK DISCOVERY &amp; AUDIT LOG" FontSize="13" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center" />
                             </StackPanel>
-                            <TextBlock x:Name="ScanStatusText" Text="Engine monitoring local interface. All subnet traffic isolated." FontSize="12" Foreground="#94A3B8" Margin="0,4,0,0" />
+                            <TextBlock x:Name="ScanStatusText" Text="Engine monitoring local interface. All subnet traffic isolated." FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,4,0,0" />
                         </StackPanel>
 
                         <!-- Controls -->
@@ -213,10 +213,10 @@
                     </Grid>
 
                     <!-- Monospace Terminal Log Box -->
-                    <Border Background="#101522" BorderBrush="#1C2538" BorderThickness="1" CornerRadius="8" Padding="14,12">
+                    <Border Background="{DynamicResource BgInputBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="8" Padding="14,12">
                         <TextBox x:Name="LogTextBox" Height="180"
                                  Background="Transparent" BorderThickness="0"
-                                 Foreground="#94A3B8"
+                                 Foreground="{DynamicResource TextSecondaryBrush}"
                                  FontFamily="Consolas, Cascadia Code" FontSize="11.5"
                                  IsReadOnly="True" TextWrapping="Wrap"
                                  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" />

@@ -26,9 +26,6 @@ namespace NetSentry.App
 
             Log("Application OnStartup started.");
 
-            ShutdownMode = ShutdownMode.OnMainWindowClose;
-            base.OnStartup(e);
-
             AppDomain.CurrentDomain.ProcessExit += (s, args) =>
             {
                 Log("ProcessExit triggered.");
@@ -56,6 +53,18 @@ namespace NetSentry.App
                 Log($"[UnobservedTaskException]\n{args.Exception}");
                 args.SetObserved();
             };
+
+            ShutdownMode = ShutdownMode.OnLastWindowClose;
+
+            try
+            {
+                base.OnStartup(e);
+            }
+            catch (Exception ex)
+            {
+                Log($"[Fatal Startup Exception]\n{ex}");
+                throw;
+            }
         }
     }
 }

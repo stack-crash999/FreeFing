@@ -5,7 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" 
              d:DesignHeight="900" d:DesignWidth="1100"
-             Background="#0E131F">
+             Background="Transparent">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="32,26,32,28">
         <StackPanel MaxWidth="1200" HorizontalAlignment="Stretch">
@@ -19,7 +19,7 @@
 
                 <StackPanel Grid.Column="0">
                     <TextBlock x:Name="InsightsTitleBlock" Text="Insights of Home Network"
-                               FontSize="25" FontWeight="Bold" Foreground="White" Margin="0,0,0,8"/>
+                               FontSize="25" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,8"/>
 
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <!-- Monitoring active Badge -->
@@ -31,7 +31,7 @@
                         </Border>
 
                         <!-- Updated 5m ago Badge -->
-                        <Border Background="#1A3B82F6" BorderBrush="#2563EB" BorderThickness="1" CornerRadius="6" Padding="10,4" Margin="0,0,10,0">
+                        <Border Background="#1A3B82F6" BorderBrush="{DynamicResource AccentBlueBrush}" BorderThickness="1" CornerRadius="6" Padding="10,4" Margin="0,0,10,0">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <TextBlock Text="&#xE823;" FontFamily="Segoe MDL2 Assets" FontSize="11" Foreground="#38BDF8" Margin="0,0,6,0" VerticalAlignment="Center" />
                                 <TextBlock x:Name="LastUpdatedBadgeBlock" Text="Updated 1m ago" FontSize="11.5" Foreground="#38BDF8" VerticalAlignment="Center" />
@@ -39,17 +39,17 @@
                         </Border>
 
                         <!-- Subnet / Workspace Pill -->
-                        <Border Background="#1E1B4B" BorderBrush="#4338CA" BorderThickness="1" CornerRadius="6" Padding="10,4">
+                        <Border Background="{DynamicResource BgInputBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="6" Padding="10,4">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <TextBlock Text="&#xE80F;" FontFamily="Segoe MDL2 Assets" FontSize="11" Foreground="#A5B4FC" Margin="0,0,6,0" VerticalAlignment="Center" />
-                                <TextBlock x:Name="SubnetBadgeBlock" Text="Home Subnet" FontSize="11.5" FontWeight="SemiBold" Foreground="#A5B4FC" VerticalAlignment="Center" />
+                                <TextBlock Text="&#xE80F;" FontFamily="Segoe MDL2 Assets" FontSize="11" Foreground="#38BDF8" Margin="0,0,6,0" VerticalAlignment="Center" />
+                                <TextBlock x:Name="SubnetBadgeBlock" Text="Home Subnet" FontSize="11.5" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center" />
                             </StackPanel>
                         </Border>
                     </StackPanel>
                 </StackPanel>
 
                 <!-- Dev Signature Logo Badge -->
-                <Border Grid.Column="1" Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="8" Padding="12,6" VerticalAlignment="Center">
+                <Border Grid.Column="1" Background="{DynamicResource BgCardBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="8" Padding="12,6" VerticalAlignment="Center">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Path Data="{StaticResource LogoSynETX}" Fill="#38BDF8" Width="14" Height="14" Stretch="Uniform" Margin="0,0,8,0" VerticalAlignment="Center" />
                         <TextBlock Text="SynETXSoftware Insights" FontSize="11.5" FontWeight="Bold" Foreground="#38BDF8" VerticalAlignment="Center" />
@@ -61,8 +61,8 @@
                  SECTION 1: DEVICE DISTRIBUTION (MATCHING FING SCREENSHOT)
                  ══════════════════════════════════════════════ -->
             <StackPanel Margin="0,0,0,28">
-                <TextBlock Text="Device distribution" FontSize="19" FontWeight="Bold" Foreground="White" Margin="0,0,0,4"/>
-                <TextBlock Text="See how your devices are grouped and identified" FontSize="13" Foreground="#94A3B8" Margin="0,0,0,16"/>
+                <TextBlock Text="Device distribution" FontSize="19" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,4"/>
+                <TextBlock Text="See how your devices are grouped and identified" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,16"/>
 
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -74,7 +74,7 @@
                     </Grid.ColumnDefinitions>
 
                     <!-- ── CARD 1: Devices by profile ── -->
-                    <Border Grid.Column="0" Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="20,18">
+                    <Border Grid.Column="0" Background="{DynamicResource BgCardBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="12" Padding="20,18">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -84,18 +84,18 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <TextBlock Text="Devices by profile" FontSize="15" FontWeight="Bold" Foreground="White"/>
-                            <TextBlock Grid.Row="1" x:Name="ProfileCountSubtitle" Text="Based on 0 devices" FontSize="12" Foreground="#64748B" Margin="0,3,0,12"/>
+                            <TextBlock Text="Devices by profile" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                            <TextBlock Grid.Row="1" x:Name="ProfileCountSubtitle" Text="Based on 0 devices" FontSize="12" Foreground="{DynamicResource TextMutedBrush}" Margin="0,3,0,12"/>
 
                             <!-- Center Donut Visualization -->
                             <Grid Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <Ellipse Width="110" Height="110" Stroke="#1E293B" StrokeThickness="16"/>
+                                <Ellipse Width="110" Height="110" Stroke="{DynamicResource BorderSubtleBrush}" StrokeThickness="16"/>
                                 <Ellipse Width="110" Height="110" Stroke="#10B981" StrokeThickness="16" StrokeDashArray="3.5 1.5" StrokeDashOffset="0"/>
                                 <Ellipse Width="110" Height="110" Stroke="#14B8A6" StrokeThickness="16" StrokeDashArray="2.5 4" StrokeDashOffset="4"/>
                                 <Ellipse Width="110" Height="110" Stroke="#F59E0B" StrokeThickness="16" StrokeDashArray="1.8 5" StrokeDashOffset="7"/>
                                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                                    <TextBlock x:Name="ProfileDonutCenterCount" Text="0" FontSize="20" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
-                                    <TextBlock Text="PROFILES" FontSize="9" FontWeight="Bold" Foreground="#64748B" HorizontalAlignment="Center"/>
+                                    <TextBlock x:Name="ProfileDonutCenterCount" Text="0" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="PROFILES" FontSize="9" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Center"/>
                                 </StackPanel>
                             </Grid>
 
@@ -104,30 +104,30 @@
                                 <Grid Margin="0,0,0,8">
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                         <Border Width="8" Height="8" CornerRadius="4" Background="#10B981" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                                        <TextBlock Text="Personal" FontSize="12.5" Foreground="#CBD5E1"/>
+                                        <TextBlock Text="Personal" FontSize="12.5" Foreground="{DynamicResource TextSecondaryBrush}"/>
                                     </StackPanel>
-                                    <TextBlock x:Name="CountPersonalBlock" Text="0" FontSize="12.5" FontWeight="SemiBold" Foreground="White" HorizontalAlignment="Right"/>
+                                    <TextBlock x:Name="CountPersonalBlock" Text="0" FontSize="12.5" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Right"/>
                                 </Grid>
                                 <Grid Margin="0,0,0,8">
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                         <Border Width="8" Height="8" CornerRadius="4" Background="#14B8A6" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                                        <TextBlock Text="Smart Home / IoT" FontSize="12.5" Foreground="#CBD5E1"/>
+                                        <TextBlock Text="Smart Home / IoT" FontSize="12.5" Foreground="{DynamicResource TextSecondaryBrush}"/>
                                     </StackPanel>
-                                    <TextBlock x:Name="CountSmartHomeBlock" Text="0" FontSize="12.5" FontWeight="SemiBold" Foreground="White" HorizontalAlignment="Right"/>
+                                    <TextBlock x:Name="CountSmartHomeBlock" Text="0" FontSize="12.5" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Right"/>
                                 </Grid>
                                 <Grid Margin="0,0,0,8">
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                         <Border Width="8" Height="8" CornerRadius="4" Background="#F59E0B" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                                        <TextBlock Text="Networking" FontSize="12.5" Foreground="#CBD5E1"/>
+                                        <TextBlock Text="Networking" FontSize="12.5" Foreground="{DynamicResource TextSecondaryBrush}"/>
                                     </StackPanel>
-                                    <TextBlock x:Name="CountNetworkingBlock" Text="0" FontSize="12.5" FontWeight="SemiBold" Foreground="White" HorizontalAlignment="Right"/>
+                                    <TextBlock x:Name="CountNetworkingBlock" Text="0" FontSize="12.5" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Right"/>
                                 </Grid>
                                 <Grid>
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                         <Border Width="8" Height="8" CornerRadius="4" Background="#38BDF8" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                                        <TextBlock Text="Workstation &amp; Other" FontSize="12.5" Foreground="#CBD5E1"/>
+                                        <TextBlock Text="Workstation &amp; Other" FontSize="12.5" Foreground="{DynamicResource TextSecondaryBrush}"/>
                                     </StackPanel>
-                                    <TextBlock x:Name="CountOtherBlock" Text="0" FontSize="12.5" FontWeight="SemiBold" Foreground="White" HorizontalAlignment="Right"/>
+                                    <TextBlock x:Name="CountOtherBlock" Text="0" FontSize="12.5" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Right"/>
                                 </Grid>
                             </StackPanel>
 
@@ -138,7 +138,7 @@
                     </Border>
 
                     <!-- ── CARD 2: Device model recognition ── -->
-                    <Border Grid.Column="2" Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="20,18">
+                    <Border Grid.Column="2" Background="{DynamicResource BgCardBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="12" Padding="20,18">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -148,18 +148,18 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <TextBlock Text="Device model recognition" FontSize="15" FontWeight="Bold" Foreground="White"/>
-                            <TextBlock Grid.Row="1" x:Name="RecognitionCountSubtitle" Text="Based on 0 devices" FontSize="12" Foreground="#64748B" Margin="0,3,0,12"/>
+                            <TextBlock Text="Device model recognition" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                            <TextBlock Grid.Row="1" x:Name="RecognitionCountSubtitle" Text="Based on 0 devices" FontSize="12" Foreground="{DynamicResource TextMutedBrush}" Margin="0,3,0,12"/>
 
                             <!-- Center Donut Visualization -->
                             <Grid Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <Ellipse Width="110" Height="110" Stroke="#1E293B" StrokeThickness="16"/>
-                                <Ellipse Width="110" Height="110" Stroke="#2563EB" StrokeThickness="16" StrokeDashArray="4 1" StrokeDashOffset="0"/>
+                                <Ellipse Width="110" Height="110" Stroke="{DynamicResource BorderSubtleBrush}" StrokeThickness="16"/>
+                                <Ellipse Width="110" Height="110" Stroke="{DynamicResource AccentBlueBrush}" StrokeThickness="16" StrokeDashArray="4 1" StrokeDashOffset="0"/>
                                 <Ellipse Width="110" Height="110" Stroke="#38BDF8" StrokeThickness="16" StrokeDashArray="2 3" StrokeDashOffset="5"/>
-                                <Ellipse Width="110" Height="110" Stroke="#64748B" StrokeThickness="16" StrokeDashArray="1 5" StrokeDashOffset="8"/>
+                                <Ellipse Width="110" Height="110" Stroke="{DynamicResource TextMutedBrush}" StrokeThickness="16" StrokeDashArray="1 5" StrokeDashOffset="8"/>
                                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                                     <TextBlock x:Name="RecognitionDonutCenterPercent" Text="92%" FontSize="20" FontWeight="Bold" Foreground="#38BDF8" HorizontalAlignment="Center"/>
-                                    <TextBlock Text="IDENTIFIED" FontSize="9" FontWeight="Bold" Foreground="#64748B" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="IDENTIFIED" FontSize="9" FontWeight="Bold" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Center"/>
                                 </StackPanel>
                             </Grid>
 
@@ -167,24 +167,24 @@
                             <StackPanel Grid.Row="3" Margin="0,14,0,16">
                                 <Grid Margin="0,0,0,8">
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <Border Width="8" Height="8" CornerRadius="4" Background="#2563EB" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                                        <TextBlock Text="Full model recognition" FontSize="12.5" Foreground="#CBD5E1"/>
+                                        <Border Width="8" Height="8" CornerRadius="4" Background="{DynamicResource AccentBlueBrush}" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="Full model recognition" FontSize="12.5" Foreground="{DynamicResource TextSecondaryBrush}"/>
                                     </StackPanel>
-                                    <TextBlock x:Name="CountFullRecBlock" Text="0" FontSize="12.5" FontWeight="SemiBold" Foreground="White" HorizontalAlignment="Right"/>
+                                    <TextBlock x:Name="CountFullRecBlock" Text="0" FontSize="12.5" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Right"/>
                                 </Grid>
                                 <Grid Margin="0,0,0,8">
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                         <Border Width="8" Height="8" CornerRadius="4" Background="#38BDF8" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                                        <TextBlock Text="Partial recognition (OUI)" FontSize="12.5" Foreground="#CBD5E1"/>
+                                        <TextBlock Text="Partial recognition (OUI)" FontSize="12.5" Foreground="{DynamicResource TextSecondaryBrush}"/>
                                     </StackPanel>
-                                    <TextBlock x:Name="CountPartialRecBlock" Text="0" FontSize="12.5" FontWeight="SemiBold" Foreground="White" HorizontalAlignment="Right"/>
+                                    <TextBlock x:Name="CountPartialRecBlock" Text="0" FontSize="12.5" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Right"/>
                                 </Grid>
                                 <Grid>
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <Border Width="8" Height="8" CornerRadius="4" Background="#64748B" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                                        <TextBlock Text="Unrecognized nodes" FontSize="12.5" Foreground="#CBD5E1"/>
+                                        <Border Width="8" Height="8" CornerRadius="4" Background="{DynamicResource TextMutedBrush}" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="Unrecognized nodes" FontSize="12.5" Foreground="{DynamicResource TextSecondaryBrush}"/>
                                     </StackPanel>
-                                    <TextBlock x:Name="CountUnrecBlock" Text="0" FontSize="12.5" FontWeight="SemiBold" Foreground="White" HorizontalAlignment="Right"/>
+                                    <TextBlock x:Name="CountUnrecBlock" Text="0" FontSize="12.5" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Right"/>
                                 </Grid>
                             </StackPanel>
 
@@ -195,7 +195,7 @@
                     </Border>
 
                     <!-- ── CARD 3: Smart Home integrations ── -->
-                    <Border Grid.Column="4" Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="20,18">
+                    <Border Grid.Column="4" Background="{DynamicResource BgCardBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="12" Padding="20,18">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -204,45 +204,45 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <TextBlock Text="Smart Home integrations" FontSize="15" FontWeight="Bold" Foreground="White"/>
-                            <TextBlock Grid.Row="1" x:Name="SmartHomeSubtitle" Text="Based on detected IoT ecosystems" FontSize="12" Foreground="#64748B" Margin="0,3,0,16"/>
+                            <TextBlock Text="Smart Home integrations" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                            <TextBlock Grid.Row="1" x:Name="SmartHomeSubtitle" Text="Based on detected IoT ecosystems" FontSize="12" Foreground="{DynamicResource TextMutedBrush}" Margin="0,3,0,16"/>
 
                             <!-- Integration Rows -->
                             <StackPanel Grid.Row="2" Margin="0,4,0,20">
                                 <!-- Amazon Alexa -->
-                                <Border Background="#121824" BorderBrush="#232E45" BorderThickness="1" CornerRadius="8" Padding="12,10" Margin="0,0,0,10">
+                                <Border Background="{DynamicResource BgInputBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="8" Padding="12,10" Margin="0,0,0,10">
                                     <Grid VerticalAlignment="Center">
                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                             <Border Width="26" Height="26" CornerRadius="13" Background="#00CAFF" Margin="0,0,10,0" VerticalAlignment="Center">
                                                 <TextBlock Text="&#xE7F4;" FontFamily="Segoe MDL2 Assets" FontSize="13" Foreground="Black" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                             </Border>
-                                            <TextBlock Text="Amazon Alexa / Echo" FontSize="13" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
+                                            <TextBlock Text="Amazon Alexa / Echo" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
                                         </StackPanel>
                                         <TextBlock x:Name="CountAlexaBlock" Text="1" FontSize="13" FontWeight="Bold" Foreground="#38BDF8" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                                     </Grid>
                                 </Border>
 
                                 <!-- Home Assistant -->
-                                <Border Background="#121824" BorderBrush="#232E45" BorderThickness="1" CornerRadius="8" Padding="12,10" Margin="0,0,0,10">
+                                <Border Background="{DynamicResource BgInputBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="8" Padding="12,10" Margin="0,0,0,10">
                                     <Grid VerticalAlignment="Center">
                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                             <Border Width="26" Height="26" CornerRadius="6" Background="#03A9F4" Margin="0,0,10,0" VerticalAlignment="Center">
                                                 <TextBlock Text="&#xE80F;" FontFamily="Segoe MDL2 Assets" FontSize="13" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                             </Border>
-                                            <TextBlock Text="Home Assistant" FontSize="13" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
+                                            <TextBlock Text="Home Assistant" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
                                         </StackPanel>
                                         <TextBlock x:Name="CountHomeAssistantBlock" Text="1" FontSize="13" FontWeight="Bold" Foreground="#38BDF8" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                                     </Grid>
                                 </Border>
 
                                 <!-- Apple AirPlay / HomeKit -->
-                                <Border Background="#121824" BorderBrush="#232E45" BorderThickness="1" CornerRadius="8" Padding="12,10">
+                                <Border Background="{DynamicResource BgInputBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="8" Padding="12,10">
                                     <Grid VerticalAlignment="Center">
                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                             <Border Width="26" Height="26" CornerRadius="6" Background="#334155" Margin="0,0,10,0" VerticalAlignment="Center">
                                                 <TextBlock Text="&#xE7F5;" FontFamily="Segoe MDL2 Assets" FontSize="13" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                             </Border>
-                                            <TextBlock Text="Apple AirPlay / Cast" FontSize="13" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
+                                            <TextBlock Text="Apple AirPlay / Cast" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
                                         </StackPanel>
                                         <TextBlock x:Name="CountAirPlayBlock" Text="2" FontSize="13" FontWeight="Bold" Foreground="#38BDF8" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                                     </Grid>
@@ -261,8 +261,8 @@
                  SECTION 2: LIFECYCLE, WARRANTY & SECURITY INDEX
                  ══════════════════════════════════════════════ -->
             <StackPanel Margin="0,0,0,24">
-                <TextBlock Text="Lifecycle and security health" FontSize="19" FontWeight="Bold" Foreground="White" Margin="0,0,0,4"/>
-                <TextBlock Text="View lifecycle firmware status and security defense health for your devices" FontSize="13" Foreground="#94A3B8" Margin="0,0,0,16"/>
+                <TextBlock Text="Lifecycle and security health" FontSize="19" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,4"/>
+                <TextBlock Text="View lifecycle firmware status and security defense health for your devices" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,16"/>
 
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -272,7 +272,7 @@
                     </Grid.ColumnDefinitions>
 
                     <!-- Lifecycle Overview Card -->
-                    <Border Grid.Column="0" Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="20,18">
+                    <Border Grid.Column="0" Background="{DynamicResource BgCardBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="12" Padding="20,18">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -281,21 +281,21 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <TextBlock Text="Lifecycle overview" FontSize="15" FontWeight="Bold" Foreground="White"/>
-                            <TextBlock Grid.Row="1" x:Name="LifecycleSubtitle" Text="Based on active monitored hosts" FontSize="12" Foreground="#64748B" Margin="0,3,0,14"/>
+                            <TextBlock Text="Lifecycle overview" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                            <TextBlock Grid.Row="1" x:Name="LifecycleSubtitle" Text="Based on active monitored hosts" FontSize="12" Foreground="{DynamicResource TextMutedBrush}" Margin="0,3,0,14"/>
 
                             <StackPanel Grid.Row="2" Margin="0,0,0,18">
                                 <Grid Margin="0,0,0,10">
-                                    <TextBlock Text="Current Generation (Active Support)" Foreground="#CBD5E1" FontSize="13" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Current Generation (Active Support)" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="13" VerticalAlignment="Center"/>
                                     <TextBlock x:Name="CountCurrentGenBlock" Text="8 Devices" Foreground="#10B981" FontWeight="Bold" FontSize="13" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                                 </Grid>
                                 <Grid Margin="0,0,0,10">
-                                    <TextBlock Text="Supported Hardware" Foreground="#CBD5E1" FontSize="13" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Supported Hardware" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="13" VerticalAlignment="Center"/>
                                     <TextBlock x:Name="CountSupportedBlock" Text="3 Devices" Foreground="#38BDF8" FontWeight="Bold" FontSize="13" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                                 </Grid>
                                 <Grid>
-                                    <TextBlock Text="Legacy / End-of-Life" Foreground="#CBD5E1" FontSize="13" VerticalAlignment="Center"/>
-                                    <TextBlock x:Name="CountLegacyBlock" Text="0 Devices" Foreground="#64748B" FontWeight="Bold" FontSize="13" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Legacy / End-of-Life" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="13" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="CountLegacyBlock" Text="0 Devices" Foreground="{DynamicResource TextMutedBrush}" FontWeight="Bold" FontSize="13" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                                 </Grid>
                             </StackPanel>
 
@@ -305,7 +305,7 @@
                     </Border>
 
                     <!-- Security & Threat Posture Card -->
-                    <Border Grid.Column="2" Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="20,18">
+                    <Border Grid.Column="2" Background="{DynamicResource BgCardBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="12" Padding="20,18">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -314,21 +314,21 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <TextBlock Text="Subnet security posture" FontSize="15" FontWeight="Bold" Foreground="White"/>
-                            <TextBlock Grid.Row="1" Text="Live defense status and vulnerability exposure" FontSize="12" Foreground="#64748B" Margin="0,3,0,14"/>
+                            <TextBlock Text="Subnet security posture" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                            <TextBlock Grid.Row="1" Text="Live defense status and vulnerability exposure" FontSize="12" Foreground="{DynamicResource TextMutedBrush}" Margin="0,3,0,14"/>
 
                             <StackPanel Grid.Row="2" Margin="0,0,0,18">
                                 <Grid Margin="0,0,0,10">
-                                    <TextBlock Text="ARP Poison Spoof Protection" Foreground="#CBD5E1" FontSize="13" VerticalAlignment="Center"/>
+                                    <TextBlock Text="ARP Poison Spoof Protection" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="13" VerticalAlignment="Center"/>
                                     <TextBlock Text="DEFENDED" Foreground="#10B981" FontWeight="Bold" FontSize="12" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                                 </Grid>
                                 <Grid Margin="0,0,0,10">
-                                    <TextBlock Text="Vulnerable Port Exposure" Foreground="#CBD5E1" FontSize="13" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Vulnerable Port Exposure" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="13" VerticalAlignment="Center"/>
                                     <TextBlock Text="LOW (0 Critical)" Foreground="#10B981" FontWeight="Bold" FontSize="12" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                                 </Grid>
                                 <Grid>
-                                    <TextBlock Text="Subnet Boundary Isolation" Foreground="#CBD5E1" FontSize="13" VerticalAlignment="Center"/>
-                                    <TextBlock Text="ENFORCED" Foreground="#2563EB" FontWeight="Bold" FontSize="12" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Subnet Boundary Isolation" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="13" VerticalAlignment="Center"/>
+                                    <TextBlock Text="ENFORCED" Foreground="{DynamicResource AccentBlueBrush}" FontWeight="Bold" FontSize="12" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                                 </Grid>
                             </StackPanel>
 
@@ -340,7 +340,7 @@
             </StackPanel>
 
             <!-- ── Developed By SynETXSoftware Showcase Banner ── -->
-            <Border Background="#121824" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" Padding="20,16">
+            <Border Background="{DynamicResource BgCardBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="12" Padding="20,16">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -348,22 +348,22 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <Border Grid.Column="0" Background="#1E283D" BorderBrush="#2D3F66" BorderThickness="1" Width="44" Height="44" CornerRadius="10" Margin="0,0,16,0" VerticalAlignment="Center">
+                    <Border Grid.Column="0" Background="{DynamicResource BgInputBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1" Width="44" Height="44" CornerRadius="10" Margin="0,0,16,0" VerticalAlignment="Center">
                         <Path Data="{StaticResource LogoSynETX}" Fill="#38BDF8" Width="22" Height="22" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
 
                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock Text="Developed by SynETXSoftware" FontSize="14" FontWeight="Bold" Foreground="White" VerticalAlignment="Center"/>
-                            <Border Background="#1A2563EB" BorderBrush="#2563EB" BorderThickness="1" CornerRadius="4" Padding="6,1" Margin="10,0,0,0">
+                            <TextBlock Text="Developed by SynETXSoftware" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                            <Border Background="#1A2563EB" BorderBrush="{DynamicResource AccentBlueBrush}" BorderThickness="1" CornerRadius="4" Padding="6,1" Margin="10,0,0,0">
                                 <TextBlock Text="Official Developer" FontSize="10" FontWeight="SemiBold" Foreground="#38BDF8"/>
                             </Border>
                         </StackPanel>
                         <TextBlock Text="High-performance network discovery, model recognition engine, and hardware firewall architecture."
-                                   FontSize="12" Foreground="#94A3B8" Margin="0,2,0,0"/>
+                                   FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,2,0,0"/>
                     </StackPanel>
 
-                    <TextBlock Grid.Column="2" Text="SynETXSoftware © 2026" FontSize="12" FontWeight="SemiBold" Foreground="#64748B" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="2" Text="SynETXSoftware © 2026" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center"/>
                 </Grid>
             </Border>
         </StackPanel>

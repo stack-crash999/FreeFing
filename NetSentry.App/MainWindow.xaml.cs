@@ -23,16 +23,17 @@ namespace NetSentry.App
         private string _currentLocalIp = "";
         private string _currentPublicIp = "";
         private string _currentIsp = "";
+        private string _activeTabName = "Overview";
         private System.Windows.Threading.DispatcherTimer? _telemetryTimer;
 
         // Visual Colors for Active/Inactive Tabs
-        private readonly Brush _brushActiveBg = new SolidColorBrush(Color.FromRgb(0x25, 0x63, 0xEB));
-        private readonly Brush _brushActiveFg = new SolidColorBrush(Colors.White);
-        private readonly Brush _brushInactiveBg = new SolidColorBrush(Color.FromRgb(0x18, 0x20, 0x30));
-        private readonly Brush _brushInactiveFg = new SolidColorBrush(Color.FromRgb(0x94, 0xA3, 0xB8));
-        private readonly Brush _brushRailActiveBg = new SolidColorBrush(Color.FromRgb(0x1E, 0x29, 0x3B));
-        private readonly Brush _brushRailActiveFg = new SolidColorBrush(Color.FromRgb(0x38, 0xBD, 0xF8));
-        private readonly Brush _brushRailInactiveFg = new SolidColorBrush(Color.FromRgb(0x64, 0x74, 0x8B));
+        private Brush _brushActiveBg = new SolidColorBrush(Color.FromRgb(0x25, 0x63, 0xEB));
+        private Brush _brushActiveFg = new SolidColorBrush(Colors.White);
+        private Brush _brushInactiveBg = new SolidColorBrush(Color.FromRgb(0x18, 0x20, 0x30));
+        private Brush _brushInactiveFg = new SolidColorBrush(Color.FromRgb(0x94, 0xA3, 0xB8));
+        private Brush _brushRailActiveBg = new SolidColorBrush(Color.FromRgb(0x1E, 0x29, 0x3B));
+        private Brush _brushRailActiveFg = new SolidColorBrush(Color.FromRgb(0x38, 0xBD, 0xF8));
+        private Brush _brushRailInactiveFg = new SolidColorBrush(Color.FromRgb(0x64, 0x74, 0x8B));
 
         public MainWindow()
         {
@@ -142,6 +143,26 @@ namespace NetSentry.App
                     : new SolidColorBrush(Color.FromRgb(0x3B, 0x82, 0xF6));
             }
             catch { }
+
+            // Dynamic Tab Button Brushes for Light / Dark Mode
+            _brushInactiveBg = isDark 
+                ? new SolidColorBrush(Color.FromRgb(0x18, 0x20, 0x30)) 
+                : new SolidColorBrush(Color.FromRgb(0xF1, 0xF5, 0xF9));
+            _brushInactiveFg = isDark 
+                ? new SolidColorBrush(Color.FromRgb(0x94, 0xA3, 0xB8)) 
+                : new SolidColorBrush(Color.FromRgb(0x47, 0x55, 0x69));
+            _brushRailActiveBg = isDark 
+                ? new SolidColorBrush(Color.FromRgb(0x1E, 0x29, 0x3B)) 
+                : new SolidColorBrush(Color.FromRgb(0xE2, 0xE8, 0xF0));
+            _brushRailActiveFg = isDark 
+                ? new SolidColorBrush(Color.FromRgb(0x38, 0xBD, 0xF8)) 
+                : new SolidColorBrush(Color.FromRgb(0x25, 0x63, 0xEB));
+            _brushRailInactiveFg = isDark 
+                ? new SolidColorBrush(Color.FromRgb(0x64, 0x74, 0x8B)) 
+                : new SolidColorBrush(Color.FromRgb(0x64, 0x74, 0x8B));
+
+            // Refresh current active tab visual
+            HighlightCurrentTab();
         }
 
         private void ThemeToggleBtn_Click(object sender, RoutedEventArgs e)
@@ -149,10 +170,22 @@ namespace NetSentry.App
             ThemeManager.ToggleTheme();
         }
 
+        private static void LogApp(string msg)
+        {
+            try
+            {
+                string logDir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NetSentry");
+                System.IO.Directory.CreateDirectory(logDir);
+                System.IO.File.AppendAllText(System.IO.Path.Combine(logDir, "app_debug.log"), $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}] [MainWindow] {msg}\n");
+            }
+            catch { }
+        }
+
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
             try
             {
+                LogApp("Window_Loaded started.");
                 ShowTab("Overview");
 
                 // Start Python bridge
@@ -160,9 +193,12 @@ namespace NetSentry.App
 
                 // Initial network info fetch
                 await RefreshNetworkInfoAsync();
+                LogApp("RefreshNetworkInfoAsync completed.");
 
                 // Fetch initial devices from cache
                 var initialDevices = await _bridge.GetDevicesAsync();
+                LogApp($"Fetched initial devices: {initialDevices.Count}");
+
                 _devices.Clear();
                 foreach (var d in initialDevices)
                 {
@@ -171,9 +207,13 @@ namespace NetSentry.App
                 }
 
                 DeviceListControl.SetDevices(_devices);
+                LogApp("DeviceListControl.SetDevices completed.");
                 SecurityControl.UpdateDevices(_devices);
+                LogApp("SecurityControl.UpdateDevices completed.");
                 InsightsControl.UpdateInsights(_devices);
+                LogApp("InsightsControl.UpdateInsights completed.");
                 UpdateSubviewsHud();
+                LogApp("UpdateSubviewsHud completed.");
 
                 // Start live telemetry polling timer (every 6 seconds)
                 _telemetryTimer = new System.Windows.Threading.DispatcherTimer
@@ -182,10 +222,11 @@ namespace NetSentry.App
                 };
                 _telemetryTimer.Tick += async (_, _) => await RefreshNetworkInfoAsync();
                 _telemetryTimer.Start();
+                LogApp("Telemetry timer started.");
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Error during Window_Loaded: {ex.Message}");
+                LogApp($"Error during Window_Loaded: {ex}");
             }
         }
 
@@ -203,6 +244,8 @@ namespace NetSentry.App
 
         private void ShowTab(string tabName)
         {
+            _activeTabName = tabName;
+
             // Reset tab button styles
             ResetNavTabVisuals();
 
@@ -235,6 +278,29 @@ namespace NetSentry.App
                 case "Setup":
                     SetupControl.SetNetworkSettings("Primary Adapter", _currentLocalIp, _currentSubnet, _currentGatewayIp);
                     ShowView(SetupControl);
+                    HighlightNav(NavSetupBtn, TopTabSetup);
+                    break;
+            }
+        }
+
+        private void HighlightCurrentTab()
+        {
+            ResetNavTabVisuals();
+            switch (_activeTabName)
+            {
+                case "Overview":
+                    HighlightNav(NavOverviewBtn, TopTabOverview);
+                    break;
+                case "Devices":
+                    HighlightNav(NavDevicesBtn, TopTabDevices);
+                    break;
+                case "Insights":
+                    HighlightNav(NavInsightsBtn, TopTabInsights);
+                    break;
+                case "Security":
+                    HighlightNav(NavSecurityBtn, TopTabSecurity);
+                    break;
+                case "Setup":
                     HighlightNav(NavSetupBtn, TopTabSetup);
                     break;
             }

@@ -6,7 +6,7 @@
              xmlns:models="clr-namespace:NetSentry.App.Models"
              mc:Ignorable="d" 
              d:DesignHeight="750" d:DesignWidth="1100"
-             Background="#0E131F">
+             Background="Transparent">
 
     <Grid Margin="32,28,32,28">
         <Grid.RowDefinitions>
@@ -31,9 +31,9 @@
 
             <StackPanel Grid.Column="0">
                 <TextBlock x:Name="TitleBlock" Text="Device Inventory"
-                           FontSize="24" FontWeight="SemiBold" Foreground="White" Margin="0,0,0,4" />
+                           FontSize="24" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,4" />
                 <TextBlock x:Name="SubtitleBlock" Text="Showing active subnet devices • Click any host to inspect full hardware specs"
-                           FontSize="13" Foreground="#94A3B8" />
+                           FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}" />
             </StackPanel>
 
             <!-- Protection Active Badge -->
@@ -44,8 +44,8 @@
                         <TextBlock Text="ARP Guard Active" FontSize="11.5" FontWeight="SemiBold" Foreground="#10B981" />
                     </StackPanel>
                 </Border>
-                <Border Background="#121824" BorderBrush="#232E45" BorderThickness="1" CornerRadius="6" Padding="10,4">
-                    <TextBlock x:Name="UpdatedBlock" Text="Updated Just now" FontSize="11.5" Foreground="#94A3B8" />
+                <Border Background="{DynamicResource BgCardBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="6" Padding="10,4">
+                    <TextBlock x:Name="UpdatedBlock" Text="Updated Just now" FontSize="11.5" Foreground="{DynamicResource TextSecondaryBrush}" />
                 </Border>
             </StackPanel>
         </Grid>
@@ -62,23 +62,23 @@
             </Grid.ColumnDefinitions>
 
             <!-- Search input with vector icon -->
-            <Border Grid.Column="0" Background="#121824" BorderBrush="#232E45" BorderThickness="1" CornerRadius="8" Height="36" Padding="10,0">
+            <Border Grid.Column="0" Background="{DynamicResource BgInputBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="8" Height="36" Padding="10,0">
                 <Grid VerticalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <Path Grid.Column="0" Data="{StaticResource IconSearch}" Fill="#64748B"
+                    <Path Grid.Column="0" Data="{StaticResource IconSearch}" Fill="{DynamicResource TextMutedBrush}"
                           Width="13" Height="13" Stretch="Uniform" Margin="0,0,8,0" VerticalAlignment="Center" />
 
                     <TextBox Grid.Column="1" x:Name="SearchBox"
                              Background="Transparent" BorderThickness="0"
-                             Foreground="White" CaretBrush="#2563EB"
+                             Foreground="{DynamicResource TextPrimaryBrush}" CaretBrush="#2563EB"
                              FontFamily="Consolas, Cascadia Code" FontSize="12.5" VerticalAlignment="Center" />
 
                     <TextBlock Grid.Column="1" Text="Filter by name, model, vendor, IP..."
-                               Foreground="#64748B" FontSize="12" IsHitTestVisible="False" VerticalAlignment="Center">
+                               Foreground="{DynamicResource TextMutedBrush}" FontSize="12" IsHitTestVisible="False" VerticalAlignment="Center">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Setter Property="Visibility" Value="Collapsed" />
@@ -96,7 +96,7 @@
             <!-- Filter Dropdowns (Type, Brand, Status) -->
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                 <!-- Device Type Filter -->
-                <TextBlock Text="Type:" FontSize="12" Foreground="#64748B" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                <TextBlock Text="Type:" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center" Margin="0,0,6,0"/>
                 <ComboBox x:Name="TypeFilterCombo" SelectedIndex="0" Width="130" Height="34" Margin="0,0,14,0">
                     <ComboBoxItem Content="All Types" />
                     <ComboBoxItem Content="Workstation" />
@@ -110,13 +110,13 @@
                 </ComboBox>
 
                 <!-- Brand / Vendor Filter -->
-                <TextBlock Text="Brand:" FontSize="12" Foreground="#64748B" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                <TextBlock Text="Brand:" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center" Margin="0,0,6,0"/>
                 <ComboBox x:Name="BrandFilterCombo" SelectedIndex="0" Width="140" Height="34" Margin="0,0,14,0">
                     <ComboBoxItem Content="All Brands" />
                 </ComboBox>
 
                 <!-- Status Filter -->
-                <TextBlock Text="Status:" FontSize="12" Foreground="#64748B" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                <TextBlock Text="Status:" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center" Margin="0,0,6,0"/>
                 <ComboBox x:Name="StatusFilterCombo" SelectedIndex="0" Width="110" Height="34">
                     <ComboBoxItem Content="All Status" />
                     <ComboBoxItem Content="Online" />
@@ -129,7 +129,7 @@
         <!-- ══════════════════════════════════════════════
              ROW 2: DEVICE FLEET LIST (CLICKABLE FOR FULL DETAILS)
              ══════════════════════════════════════════════ -->
-        <Border Grid.Row="2" Background="#182030" BorderBrush="#232E45" BorderThickness="1" CornerRadius="12" ClipToBounds="True">
+        <Border Grid.Row="2" Background="{DynamicResource BgCardBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="12" ClipToBounds="True">
             <ListView x:Name="DeviceListViewControl"
                       Background="Transparent" BorderThickness="0"
                       ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -140,7 +140,7 @@
                     <Style TargetType="ListViewItem">
                         <Setter Property="Background" Value="Transparent" />
                         <Setter Property="BorderThickness" Value="0,0,0,1" />
-                        <Setter Property="BorderBrush" Value="#1C2538" />
+                        <Setter Property="BorderBrush" Value="{DynamicResource BorderSubtleBrush}" />
                         <Setter Property="Padding" Value="18,14" />
                         <Setter Property="Cursor" Value="Hand" />
                         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
@@ -156,10 +156,10 @@
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="rowBorder" Property="Background" Value="#1E283C" />
+                                            <Setter TargetName="rowBorder" Property="Background" Value="{DynamicResource BgSurfaceHoverBrush}" />
                                         </Trigger>
                                         <Trigger Property="IsSelected" Value="True">
-                                            <Setter TargetName="rowBorder" Property="Background" Value="#22304A" />
+                                            <Setter TargetName="rowBorder" Property="Background" Value="{DynamicResource BgSurfaceHoverBrush}" />
                                         </Trigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>
@@ -187,33 +187,33 @@
                             </Grid.ColumnDefinitions>
 
                             <!-- Col 0: Device Icon Badge -->
-                            <Border Grid.Column="0" Background="#121824" Width="44" Height="44" CornerRadius="10" Margin="0,0,18,0" VerticalAlignment="Center">
-                                <TextBlock Text="{Binding IconGlyph}" FontFamily="Segoe MDL2 Assets" Foreground="#94A3B8" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Border Grid.Column="0" Background="{DynamicResource BgInputBrush}" Width="44" Height="44" CornerRadius="10" Margin="0,0,18,0" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding IconGlyph}" FontFamily="Segoe MDL2 Assets" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Border>
 
                             <!-- Col 1: Friendly Name, Device Model, IP & MAC -->
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,18,0">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,4">
                                     <!-- Friendly Name -->
-                                    <TextBlock Text="{Binding DisplayName}" FontSize="14.5" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding DisplayName}" FontSize="14.5" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
                                     
                                     <!-- Device Model prominently displayed -->
-                                    <Border Background="#1C2538" BorderBrush="#28354E" BorderThickness="1" CornerRadius="4" Padding="7,2" Margin="10,0,0,0" VerticalAlignment="Center">
+                                    <Border Background="{DynamicResource BgInputBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="4" Padding="7,2" Margin="10,0,0,0" VerticalAlignment="Center">
                                         <TextBlock Text="{Binding Model, StringFormat='Model: {0}'}" FontSize="11" FontWeight="SemiBold" Foreground="#38BDF8"/>
                                     </Border>
                                 </StackPanel>
 
                                 <!-- Subline: IP Address • MAC Address -->
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding Ip}" FontSize="12" Foreground="#94A3B8" FontFamily="Consolas, Cascadia Code"/>
-                                    <TextBlock Text=" • " Foreground="#64748B"/>
-                                    <TextBlock Text="{Binding MacUpper}" FontSize="12" Foreground="#64748B" FontFamily="Consolas, Cascadia Code"/>
+                                    <TextBlock Text="{Binding Ip}" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" FontFamily="Consolas, Cascadia Code"/>
+                                    <TextBlock Text=" • " Foreground="{DynamicResource TextMutedBrush}"/>
+                                    <TextBlock Text="{Binding MacUpper}" FontSize="12" Foreground="{DynamicResource TextMutedBrush}" FontFamily="Consolas, Cascadia Code"/>
                                 </StackPanel>
                             </StackPanel>
 
                             <!-- Col 2: Vendor Tag -->
-                            <Border Grid.Column="2" Background="#121824" BorderBrush="#232E45" BorderThickness="1" CornerRadius="6" Padding="10,4" Margin="0,0,18,0" VerticalAlignment="Center">
-                                <TextBlock Text="{Binding Vendor}" FontSize="11" Foreground="#CBD5E1"/>
+                            <Border Grid.Column="2" Background="{DynamicResource BgInputBrush}" BorderBrush="{DynamicResource BorderSubtleBrush}" BorderThickness="1" CornerRadius="6" Padding="10,4" Margin="0,0,18,0" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding Vendor}" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
                             </Border>
 
                             <!-- Col 3: Status Badge -->
@@ -231,7 +231,7 @@
                                     VerticalAlignment="Center"/>
 
                             <!-- Col 5: Arrow Caret -->
-                            <TextBlock Grid.Column="5" Text="&#xE76C;" FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="#64748B" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Column="5" Text="&#xE76C;" FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center"/>
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
@@ -248,10 +248,10 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0" x:Name="PaginationBlock" Text="Showing 0 active devices on subnet"
-                       Foreground="#64748B" FontSize="12" VerticalAlignment="Center" />
+                       Foreground="{DynamicResource TextMutedBrush}" FontSize="12" VerticalAlignment="Center" />
 
             <TextBlock Grid.Column="1" Text="Click any device to view hardware specs, model information, and open ports"
-                       Foreground="#64748B" FontSize="11.5" VerticalAlignment="Center" />
+                       Foreground="{DynamicResource TextMutedBrush}" FontSize="11.5" VerticalAlignment="Center" />
         </Grid>
     </Grid>
 </UserControl>

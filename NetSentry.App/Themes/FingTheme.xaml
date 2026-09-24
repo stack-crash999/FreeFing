@@ -156,9 +156,9 @@
     </Style>
 
     <Style x:Key="TopNavButtonStyle" TargetType="Button">
-        <Setter Property="Background" Value="#182030" />
-        <Setter Property="Foreground" Value="#CBD5E1" />
-        <Setter Property="BorderBrush" Value="#232E45" />
+        <Setter Property="Background" Value="{DynamicResource BgCardBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderSubtleBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="FontSize" Value="12" />
@@ -176,8 +176,8 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="#222C3D" />
-                            <Setter Property="Foreground" Value="#FFFFFF" />
+                            <Setter Property="Background" Value="{DynamicResource BgSurfaceHoverBrush}" />
+                            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -187,16 +187,16 @@
 
     <!-- Card Styles -->
     <Style x:Key="FingCardStyle" TargetType="Border">
-        <Setter Property="Background" Value="#182030" />
-        <Setter Property="BorderBrush" Value="#232E45" />
+        <Setter Property="Background" Value="{DynamicResource BgCardBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderSubtleBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="CornerRadius" Value="12" />
         <Setter Property="Padding" Value="16" />
     </Style>
 
     <Style x:Key="PillNeutralStyle" TargetType="Border">
-        <Setter Property="Background" Value="#121824" />
-        <Setter Property="BorderBrush" Value="#232E45" />
+        <Setter Property="Background" Value="{DynamicResource BgInputBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderSubtleBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="CornerRadius" Value="6" />
         <Setter Property="Padding" Value="8,4" />
